@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-
 public class LoginoptionsActivity extends AppCompatActivity {
     Button Login_User,Login_Admin;
 
