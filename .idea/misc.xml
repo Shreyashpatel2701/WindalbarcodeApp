@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/DELL/WindalbarcodeApp/app/src/main/res/drawable-v24/buttonss.xml" value="0.25925925925925924" />
+        <entry key="..\:/Users/DELL/WindalbarcodeApp/app/src/main/res/drawable-v24/edit.xml" value="0.25925925925925924" />
+        <entry key="..\:/Users/DELL/WindalbarcodeApp/app/src/main/res/drawable-v24/ic_edit.xml" value="0.25925925925925924" />
+        <entry key="..\:/Users/DELL/WindalbarcodeApp/app/src/main/res/drawable-v24/ic_email.xml" value="0.25925925925925924" />
+        <entry key="..\:/Users/DELL/WindalbarcodeApp/app/src/main/res/drawable-v24/password.xml" value="0.25925925925925924" />
+        <entry key="..\:/Users/DELL/WindalbarcodeApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.25925925925925924" />
+        <entry key="..\:/Users/DELL/WindalbarcodeApp/app/src/main/res/layout/activity_main.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/DELL/WindalbarcodeApp/app/src/main/res/layout/components_information.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/DELL/WindalbarcodeApp/app/src/main/res/layout/information_vechile.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/DELL/WindalbarcodeApp/app/src/main/res/layout/login_activity.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/DELL/WindalbarcodeApp/app/src/main/res/layout/loginoptions.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/DELL/WindalbarcodeApp/app/src/main/res/layout/splashscreen.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/asus/Desktop/industry project/WINDALS/final_barcode/WindalbarcodeApp-master/app/src/main/res/layout/components_information.xml" value="0.25" />
+        <entry key="..\:/Users/asus/Desktop/industry project/WINDALS/final_barcode/WindalbarcodeApp-master/app/src/main/res/layout/greendialog.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/asus/Desktop/industry project/WINDALS/final_barcode/WindalbarcodeApp-master/app/src/main/res/layout/splashscreen.xml" value="0.25416666666666665" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
