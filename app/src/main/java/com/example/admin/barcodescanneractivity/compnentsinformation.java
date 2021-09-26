@@ -128,22 +128,6 @@ public class compnentsinformation extends AppCompatActivity {
         }else {
 
             if (receivedpartnumber.equals(selectedPartName)) {
-                //Toast.makeText(compnentsinformation.this, "Correct", Toast.LENGTH_SHORT).show();
-
-//                builder.setMessage("Barcode applied is correct")
-//                        .setCancelable(false)
-//                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                //finish();
-//                                dialog.cancel();
-//                                //Toast.makeText(getApplicationContext(), "you choose yes action for alertbox",
-//                                //        Toast.LENGTH_SHORT).show();
-//                            }
-//                        });
-//                AlertDialog alert = builder.create();
-//                alert.setTitle("Correct!");
-//                alert.show();
-
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(compnentsinformation.this);
                 ViewGroup viewGroup = findViewById(android.R.id.content);
@@ -162,24 +146,6 @@ public class compnentsinformation extends AppCompatActivity {
                 alertDialog.show();
 
             } else {
-                //Toast.makeText(compnentsinformation.this, "Wrong", Toast.LENGTH_SHORT).show();
-
-//                builder.setMessage("Barcode applied is Wrong")
-//                        .setCancelable(false)
-//                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-////                                SmsManager mySmsManager = SmsManager.getDefault();
-////                                mySmsManager.sendTextMessage("8007777482",null, "Wrong barcode applied found!", null, null);
-//                                dialog.cancel();
-//                                Toast.makeText(getApplicationContext(), "Message sent to supervisor",
-//                                        Toast.LENGTH_SHORT).show();
-//
-//                            }
-//                        });
-//                AlertDialog alert = builder.create();
-//                alert.setTitle("Wrong!");
-//                alert.show();
-
 
                 if (checkSmsPermission() == true) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(compnentsinformation.this);
