@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-   >
+    >
 
     <ScrollView
         android:layout_width="match_parent"
@@ -95,9 +95,9 @@
                 android:layout_below="@+id/plant_textview"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="30dp"></Spinner>
-
-
+                android:layout_marginRight="30dp"
+                android:minHeight="48dp"
+                tools:ignore="SpeakableTextPresentCheck"></Spinner>
 
 
             <TextView
@@ -116,7 +116,7 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/login_button"
+                android:id="@+id/login_button_admin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/forgetpassword"

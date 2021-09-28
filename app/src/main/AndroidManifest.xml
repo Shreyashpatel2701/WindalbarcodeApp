@@ -16,6 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Admin.Adminbottomnavigation"></activity>
+        <activity android:name=".Admin.AdminLoginScreen"></activity>
+        <activity android:name=".RegistrationActivity"></activity>
         <activity android:name=".LoginoptionsActivity"></activity>
         <activity android:name=".compnentsinformation"></activity>
         <activity android:name=".vehicleinformation"></activity>

@@ -41,8 +41,8 @@
             android:layout_marginRight="50dp"
             android:backgroundTint="#ffffff"
             android:text="User"
-            android:textColor="#E74C3C "
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textColor="#E74C3C " />
 
         <Button
             android:id="@+id/btn_LoginAsAdmin"
@@ -53,8 +53,8 @@
             android:layout_marginRight="50dp"
             android:backgroundTint="#ffffff"
             android:text="Admin"
-            android:textColor="#E74C3C"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textColor="#E74C3C" />
 
     </androidx.cardview.widget.CardView>
 

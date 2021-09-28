@@ -11,6 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.example.admin.barcodescanneractivity.Admin.AdminLoginScreen;
+
 public class LoginoptionsActivity extends AppCompatActivity {
     Button Login_User,Login_Admin;
 
@@ -21,6 +23,7 @@ public class LoginoptionsActivity extends AppCompatActivity {
         init();
         requestpermission();
         Login_User.setOnClickListener(new Btnuseronclicklistner());
+        Login_Admin.setOnClickListener(new Btnadminonclicklistner());
 
     }
 
@@ -36,6 +39,15 @@ public class LoginoptionsActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
+    private  class Btnadminonclicklistner implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(LoginoptionsActivity.this, AdminLoginScreen.class);
+            startActivity(intent);
+        }
+    }
+
     private void requestpermission(){
         ActivityCompat.requestPermissions(LoginoptionsActivity.this, new String[]{Manifest.permission.SEND_SMS}, PackageManager.PERMISSION_GRANTED);
     }

@@ -1,4 +1,4 @@
-package com.example.admin.barcodescanneractivity;
+package com.example.admin.barcodescanneractivity.Admin;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,31 +6,36 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
-public class Loginactivity extends AppCompatActivity {
+import com.example.admin.barcodescanneractivity.Loginactivity;
+import com.example.admin.barcodescanneractivity.R;
+import com.example.admin.barcodescanneractivity.vehicleinformation;
 
+public class AdminLoginScreen extends AppCompatActivity {
     Button Login;
     Spinner plant_selection;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-         setContentView(R.layout.login_activity);
-         init();
-         spinner_plants();
-         Login.setOnClickListener(new btnloginonclicklistener());
+        setContentView(R.layout.adminlogin);
+        init();
+        spinner_plants();
+        Login.setOnClickListener(new btnloginonclicklisteneradmin());
     }
 
     void init(){
-        Login = findViewById(R.id.login_button);
+        Login = findViewById(R.id.login_button_admin);
         plant_selection = findViewById(R.id.spinner_plant);
     }
 
-    public class btnloginonclicklistener implements View.OnClickListener{
+    class btnloginonclicklisteneradmin implements View.OnClickListener{
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(Loginactivity.this,vehicleinformation.class);
+            Intent intent = new Intent(AdminLoginScreen.this, Adminbottomnavigation.class);
             startActivity(intent);
         }
     }
@@ -41,5 +46,4 @@ public class Loginactivity extends AppCompatActivity {
         adapter_plants.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         plant_selection.setAdapter(adapter_plants);
     }
-
 }
