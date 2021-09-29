@@ -3,10 +3,10 @@
     package="com.example.admin.barcodescanneractivity">
 
     <uses-permission android:name="android.permission.CAMERA" />
-     <uses-permission android:name="android.permission.SEND_SMS"/>
-    <uses-permission android:name="android.permission.READ_SMS"/>
-    <uses-permission android:name="android.permission.RECEIVE_SMS"></uses-permission>
-    
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+
     <uses-feature android:name="android.hardware.Camera.autofocus" />
 
     <application
@@ -16,15 +16,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Admin.Adminbottomnavigation"></activity>
-        <activity android:name=".Admin.AdminLoginScreen"></activity>
-        <activity android:name=".RegistrationActivity"></activity>
-        <activity android:name=".LoginoptionsActivity"></activity>
-        <activity android:name=".compnentsinformation"></activity>
-        <activity android:name=".vehicleinformation"></activity>
-        <activity android:name=".ScanCodeActivity"></activity>
-        <activity android:name=".Loginactivity"></activity>
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".sp2"
+            android:exported="true" />
+        <activity
+            android:name=".sp1"
+            android:exported="true" />
+        <activity android:name=".Admin.Adminbottomnavigation" />
+        <activity android:name=".Admin.AdminLoginScreen" />
+        <activity android:name=".RegistrationActivity" />
+        <activity android:name=".LoginoptionsActivity" />
+        <activity android:name=".compnentsinformation" />
+        <activity android:name=".vehicleinformation" />
+        <activity android:name=".ScanCodeActivity" />
+        <activity android:name=".Loginactivity" />
+        <activity
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,18 +1,57 @@
 package com.example.admin.barcodescanneractivity;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.telephony.SmsManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.Result;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
     int MY_PERMISSIONS_REQUEST_CAMERA=0;
+    AlertDialog.Builder builder;
+    int number;
+    String selectedPartName;
+    int quantity;
+    String vehicle_number, invoice_number,date;
+    int s1;
+    TextView scannedItems_txt;
+    TextView totalItems_txt;
+    TextView summary_date;
+    TextView summary_vehiclenumber;
+    TextView summary_invoicenumber;
+    TextView summary_partquantity;
+    TextView summary_partname;
+    TextView summary_correct;
+    TextView summary_wrong;
+    int correct;
+    int wrong;
+    FirebaseFirestore db;
+
+
+
 
     ZXingScannerView scannerView;
     @Override
@@ -20,14 +59,293 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
         super.onCreate(savedInstanceState);
         scannerView = new ZXingScannerView(this);
         setContentView(scannerView);
+
+        db = FirebaseFirestore.getInstance();
+        builder = new AlertDialog.Builder(this);
+        Intent intent = getIntent();
+        selectedPartName= intent.getStringExtra("selectedPartName");
+        quantity = Integer.parseInt(intent.getStringExtra("quantity"));
+        vehicle_number = intent.getStringExtra("vehicle_number");
+        invoice_number = intent.getStringExtra("invoice_number");
+        date = intent.getStringExtra("date");
+
+
+
     }
 
     @Override
     public void handleResult(Result result) {
         //MainActivity.resulttextview.setText(result.getText());
-        compnentsinformation.receivedpartnumber = result.getText();
-        onBackPressed();
+       // compnentsinformation.receivedpartnumber = result.getText();
+        //onBackPressed();
+//        Intent intent = new Intent(ScanCodeActivity.this, compnentsinformation.class);
+//        startActivity(intent);
+
+        SharedPreferences sh = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+        s1 = sh.getInt("start_count",9 );
+        s1++;
+
+        if(s1==quantity){
+            Toast.makeText(ScanCodeActivity.this, "Scanning done", Toast.LENGTH_SHORT).show();
+            //onBackPressed();
+            if(result.getText().matches(selectedPartName)) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(ScanCodeActivity.this);
+                ViewGroup viewGroup = findViewById(android.R.id.content);
+                final View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.greendialog, viewGroup, false);
+                builder.setView(dialogView);
+                final AlertDialog alertDialog = builder.create();
+                alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+                scannedItems_txt = dialogView.findViewById(R.id.items_scanned);
+                scannedItems_txt.setText(String.valueOf(s1));
+                totalItems_txt = dialogView.findViewById(R.id.items_total);
+                totalItems_txt.setText(String.valueOf(quantity));
+
+
+
+                dialogView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        alertDialog.dismiss();
+                        //correct++;
+                        correct = sh.getInt("correct",0 );
+                        correct++;
+                        SharedPreferences.Editor myEdit = sh.edit();
+                        myEdit.putInt("correct",correct);
+                        myEdit.apply();
+
+                        summarydialog();
+
+
+                        //onBackPressed();
+                    }
+                });
+                alertDialog.setCanceledOnTouchOutside(false);
+                alertDialog.show();
+
+            }else{
+                if (checkSmsPermission() == true) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ScanCodeActivity.this);
+                    ViewGroup viewGroup = findViewById(android.R.id.content);
+                    final View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.reddialog, viewGroup, false);
+                    builder.setView(dialogView);
+                    final AlertDialog alertDialog = builder.create();
+                    alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+                    scannedItems_txt = dialogView.findViewById(R.id.items_scanned);
+                    scannedItems_txt.setText(String.valueOf(s1));
+                    totalItems_txt = dialogView.findViewById(R.id.items_total);
+                    totalItems_txt.setText(String.valueOf(quantity));
+
+
+                    SmsManager mySmsManager = SmsManager.getDefault();
+                    mySmsManager.sendTextMessage("7447297382", null, "Part with wrongly applied barcode found in vehicle no. "+vehicle_number.toString(), null, null);
+                    Toast.makeText(this, "SMS sent.", Toast.LENGTH_LONG).show();
+
+                    dialogView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            alertDialog.dismiss();
+                            //wrong++;
+                            wrong = sh.getInt("wrong",0 );
+                            wrong++;
+                            SharedPreferences.Editor myEdit = sh.edit();
+                            myEdit.putInt("wrong",wrong);
+                            myEdit.apply();
+                            summarydialog();
+                            //onBackPressed();
+
+                        }
+                    });
+                    alertDialog.setCanceledOnTouchOutside(false);
+                    alertDialog.show();
+
+                }else {
+                    Toast.makeText(this, "No permission for SMS", Toast.LENGTH_LONG).show();
+                }
+            }
+
+
+        }else{
+            Toast.makeText(ScanCodeActivity.this, "Scanning not done", Toast.LENGTH_SHORT).show();
+
+            if(result.getText().matches(selectedPartName)) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(ScanCodeActivity.this);
+            ViewGroup viewGroup = findViewById(android.R.id.content);
+            final View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.greendialog, viewGroup, false);
+            builder.setView(dialogView);
+            final AlertDialog alertDialog = builder.create();
+            alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+
+            scannedItems_txt = dialogView.findViewById(R.id.items_scanned);
+            scannedItems_txt.setText(String.valueOf(s1));
+            totalItems_txt = dialogView.findViewById(R.id.items_total);
+            totalItems_txt.setText(String.valueOf(quantity));
+
+
+
+            dialogView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    SharedPreferences.Editor myEdit = sh.edit();
+                    myEdit.putInt("start_count",s1);
+                    myEdit.apply();
+
+                    //correct++;
+                    correct = sh.getInt("correct",0 );
+                    correct++;
+                    //SharedPreferences.Editor myEdit = sh.edit();
+                    myEdit.putInt("correct",correct);
+                    myEdit.apply();
+                    alertDialog.dismiss();
+                    finish();
+                    startActivity(getIntent());
+                    //onBackPressed();
+                }
+            });
+            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.show();
+
+        }else{
+            if (checkSmsPermission() == true) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ScanCodeActivity.this);
+                ViewGroup viewGroup = findViewById(android.R.id.content);
+                final View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.reddialog, viewGroup, false);
+                builder.setView(dialogView);
+                final AlertDialog alertDialog = builder.create();
+                alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+                scannedItems_txt = dialogView.findViewById(R.id.items_scanned);
+                scannedItems_txt.setText(String.valueOf(s1));
+                totalItems_txt = dialogView.findViewById(R.id.items_total);
+                totalItems_txt.setText(String.valueOf(quantity));
+
+
+                SmsManager mySmsManager = SmsManager.getDefault();
+                mySmsManager.sendTextMessage("7447297382", null, "Part with wrongly applied barcode found in vehicle no. "+vehicle_number.toString(), null, null);
+                Toast.makeText(this, "SMS sent.", Toast.LENGTH_LONG).show();
+
+                dialogView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        SharedPreferences.Editor myEdit = sh.edit();
+                        myEdit.putInt("start_count",s1);
+                        myEdit.apply();
+
+                        //wrong++;
+                        wrong = sh.getInt("wrong",0 );
+                        wrong++;
+                        //SharedPreferences.Editor myEdit = sh.edit();
+                        myEdit.putInt("wrong",wrong);
+                        myEdit.apply();
+                        alertDialog.dismiss();
+                        //onBackPressed();
+                        finish();
+                        startActivity(getIntent());
+                    }
+                });
+                alertDialog.setCanceledOnTouchOutside(false);
+                alertDialog.show();
+
+            }else {
+                Toast.makeText(this, "No permission for SMS", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        }
+
+
+
+
+
+
     }
+
+    void summarydialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(ScanCodeActivity.this);
+        ViewGroup viewGroup = findViewById(android.R.id.content);
+        final View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.summarydialog, viewGroup, false);
+        builder.setView(dialogView);
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        summary_date =dialogView.findViewById(R.id.summary_date);
+        summary_vehiclenumber = dialogView.findViewById(R.id.summary_vehiclenumber);
+        summary_invoicenumber = dialogView.findViewById(R.id.summary_invoicenumber);
+        summary_partname = dialogView.findViewById(R.id.summary_partname);
+        summary_partquantity = dialogView.findViewById(R.id.summary_partquantity);
+        summary_correct = dialogView.findViewById(R.id.summary_correct);
+        summary_wrong = dialogView.findViewById(R.id.summary_wrong);
+
+
+        summary_date.setText(date);
+        summary_vehiclenumber.setText(vehicle_number);
+        summary_invoicenumber.setText(invoice_number);
+        summary_partname.setText(selectedPartName);
+        summary_partquantity.setText(String.valueOf(quantity));
+        summary_correct.setText(String.valueOf(correct));
+        summary_wrong.setText(String.valueOf(wrong));
+
+
+
+        dialogView.findViewById(R.id.ok_summary).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                //send to firestore
+                Map<String, Object> scanner_data = new HashMap<>();
+                scanner_data.put("date",date );
+                scanner_data.put("vehicle_number", vehicle_number);
+                scanner_data.put("invoice_number", invoice_number);
+                scanner_data.put("part_name", selectedPartName);
+                scanner_data.put("part_quantity", quantity);
+                scanner_data.put("correct_barcode", correct);
+                scanner_data.put("wrong_barcode", wrong);
+
+                db.collection("chakan")
+                        .document("data")
+                        .collection("all data")
+                        .add(scanner_data)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(@NonNull DocumentReference documentReference) {
+                                Toast.makeText(ScanCodeActivity.this, "data added to database", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(ScanCodeActivity.this, "data NOT added to database", Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+                alertDialog.dismiss();
+                onBackPressed();
+
+            }
+        });
+        alertDialog.show();
+
+
+
+
+
+    }
+
+    private Boolean checkSmsPermission() {
+
+        boolean result = ContextCompat.checkSelfPermission(ScanCodeActivity.this, Manifest.permission.SEND_SMS) == (PackageManager.PERMISSION_GRANTED);
+        return result;
+    }
+
 
     @Override
     protected void onPause() {
@@ -41,6 +359,8 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
 //        scannerView.setResultHandler(this);
 //        scannerView.startCamera();
 //    }
+
+
 
     @Override
     protected void onPostResume() {

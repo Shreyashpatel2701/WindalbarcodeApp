@@ -26,7 +26,7 @@ import java.security.Permissions;
 public class compnentsinformation extends AppCompatActivity {
 
     public static String receivedpartnumber;
-    String selectedPartName;
+    public static String selectedPartName;
     AlertDialog.Builder builder;
     Button oldwagon, newwagon,ssoold, ssonew, twentyeight_hpframe,thritysix_hpframe,threed_frame,utul_frame;
 
@@ -42,78 +42,78 @@ public class compnentsinformation extends AppCompatActivity {
 
         builder = new AlertDialog.Builder(this);
 
-        oldwagon = findViewById(R.id.old_wagon);
-        newwagon = findViewById(R.id.newWagon);
-        ssoold = findViewById(R.id.sso_old);
-        ssonew = findViewById(R.id.sso_new);
-        twentyeight_hpframe = findViewById(R.id._28_Hp_frame);
-        thritysix_hpframe = findViewById(R.id._36_Hp_frame);
-        threed_frame = findViewById(R.id._3d_frame);
-        utul_frame = findViewById(R.id.utul_frame);
-
-        oldwagon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), ScanCodeActivity.class));
-                selectedPartName = "SJ10081";
-            }
-        });
-
-        newwagon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), ScanCodeActivity.class));
-                selectedPartName = "SJ25659P21";
-            }
-        });
-
-        ssoold.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), ScanCodeActivity.class));
-                selectedPartName = "SJ30237";
-            }
-        });
-
-        ssonew.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), ScanCodeActivity.class));
-                selectedPartName = "SJ30238";
-            }
-        });
-
-        twentyeight_hpframe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), ScanCodeActivity.class));
-                selectedPartName = "SJ32344P21";
-            }
-        });
-
-        thritysix_hpframe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), ScanCodeActivity.class));
-                selectedPartName = "SJ26990P21";
-            }
-        });
-
-        threed_frame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), ScanCodeActivity.class));
-                selectedPartName = "SJ26439P21";
-            }
-        });
-
-        utul_frame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), ScanCodeActivity.class));
-                selectedPartName = "SJ30398P21";
-            }
-        });
+//        oldwagon = findViewById(R.id.old_wagon);
+//        newwagon = findViewById(R.id.newWagon);
+//        ssoold = findViewById(R.id.sso_old);
+//        ssonew = findViewById(R.id.sso_new);
+//        twentyeight_hpframe = findViewById(R.id._28_Hp_frame);
+//        thritysix_hpframe = findViewById(R.id._36_Hp_frame);
+//        threed_frame = findViewById(R.id._3d_frame);
+//        utul_frame = findViewById(R.id.utul_frame);
+//
+//        oldwagon.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(getApplicationContext(), ScanCodeActivity.class));
+//                selectedPartName = "SJ10081";
+//            }
+//        });
+//
+//        newwagon.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(getApplicationContext(), ScanCodeActivity.class));
+//                selectedPartName = "SJ25659P21";
+//            }
+//        });
+//
+//        ssoold.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(getApplicationContext(), ScanCodeActivity.class));
+//                selectedPartName = "SJ30237";
+//            }
+//        });
+//
+//        ssonew.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(getApplicationContext(), ScanCodeActivity.class));
+//                selectedPartName = "SJ30238";
+//            }
+//        });
+//
+//        twentyeight_hpframe.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(getApplicationContext(), ScanCodeActivity.class));
+//                selectedPartName = "SJ32344P21";
+//            }
+//        });
+//
+//        thritysix_hpframe.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(getApplicationContext(), ScanCodeActivity.class));
+//                selectedPartName = "SJ26990P21";
+//            }
+//        });
+//
+//        threed_frame.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(getApplicationContext(), ScanCodeActivity.class));
+//                selectedPartName = "SJ26439P21";
+//            }
+//        });
+//
+//        utul_frame.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(getApplicationContext(), ScanCodeActivity.class));
+//                selectedPartName = "SJ30398P21";
+//            }
+//        });
 
 
     }
@@ -140,7 +140,9 @@ public class compnentsinformation extends AppCompatActivity {
                 dialogView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
                         alertDialog.dismiss();
+                        onBackPressed();
                     }
                 });
                 alertDialog.show();
@@ -162,7 +164,9 @@ public class compnentsinformation extends AppCompatActivity {
                     dialogView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+
                             alertDialog.dismiss();
+                            onBackPressed();
                         }
                     });
                     alertDialog.show();
