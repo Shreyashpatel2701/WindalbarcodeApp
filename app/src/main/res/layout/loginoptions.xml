@@ -20,7 +20,7 @@
         android:layout_height="250dp"
         android:layout_alignParentBottom="true"
         android:backgroundTint="#AC190A"
-        app:cardCornerRadius="30dp">
+       >
 
         <TextView
 

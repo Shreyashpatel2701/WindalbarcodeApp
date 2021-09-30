@@ -5,13 +5,14 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="vertical">
 
-<TextView
+<Button
 
     android:layout_marginTop="175dp"
-    android:background="@drawable/edit"
+
     android:drawableStart="@drawable/ic_edit"
     android:drawableLeft="@drawable/ic_edit"
     android:layout_marginLeft="25dp"
+    android:background="@drawable/buttonss"
     android:layout_marginRight="25dp"
     android:layout_marginBottom="25dp"
     android:id="@+id/Editprofileadmin"
@@ -20,12 +21,14 @@ android:orientation="vertical">
     android:text="EDIT PROFILE"
     android:layout_gravity="center"
     android:textAlignment="center"
-    android:backgroundTint="#cae2fa">
+    android:backgroundTint="@color/colorPrimary"
+    android:textColor="#ffffff"
+    >
 
-</TextView>
+</Button>
 
-<TextView
-    android:background="@drawable/edit"
+<Button
+    android:background="@drawable/buttonss"
     android:drawableStart="@drawable/ic_logout"
     android:drawableLeft="@drawable/ic_logout"
     android:layout_margin="25dp"
@@ -35,12 +38,14 @@ android:orientation="vertical">
     android:text="LOGOUT"
     android:layout_gravity="center"
     android:textAlignment="center"
-    android:backgroundTint="#cae2fa">
+    android:backgroundTint="@color/colorPrimary"
+    android:textColor="#ffffff">
 
-</TextView>
+</Button>
 
-<TextView
-    android:background="@drawable/edit"
+<Button
+    android:background="@drawable/buttonss"
+    android:backgroundTint="@color/colorPrimary"
     android:drawableStart="@drawable/ic_logout"
     android:drawableLeft="@drawable/ic_logout"
     android:layout_margin="25dp"
@@ -50,10 +55,10 @@ android:orientation="vertical">
     android:text="EXPORT TO EXCEL"
     android:layout_gravity="center"
     android:textAlignment="center"
-    android:backgroundTint="#cae2fa">
+    android:textColor="#ffffff"
+    >
 
-</TextView>
-
+</Button>
 
 
 

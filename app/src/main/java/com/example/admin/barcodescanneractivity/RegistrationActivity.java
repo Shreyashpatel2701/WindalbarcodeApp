@@ -31,9 +31,9 @@ import java.util.HashMap;
 public class RegistrationActivity extends AppCompatActivity {
       FirebaseAuth firebaseAuth;
       ProgressDialog progressDialog;
-      EditText NAME,EMAIL,PASSWORD,DESIGNATION,PHONE;
+      EditText NAME,EMAIL,PASSWORD,PHONE;
       //TextView Sign_in;
-      Spinner ORGANIZATION;
+      Spinner DESIGNATION;
       Button Create_account;
       ActionBar actionBar;
 
@@ -47,8 +47,8 @@ public class RegistrationActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         init();
              Create_account.setOnClickListener(new CreateonclickListener());
-             OrganizationSpinner();
-             //DesignationSpinner();
+//             OrganizationSpinner();
+             DesignationSpinner();
     }
 
    // initializing view items
@@ -59,7 +59,7 @@ public class RegistrationActivity extends AppCompatActivity {
         Create_account = findViewById(R.id.create_account);
         //Sign_in = findViewById(R.id.sign_login_in);
         DESIGNATION = findViewById(R.id.registration_designation);
-        ORGANIZATION = findViewById(R.id.registration_organization);
+//        ORGANIZATION = findViewById(R.id.registration_organization);
          NAME = findViewById(R.id.register_name);
          EMAIL = findViewById(R.id.register_email);
          PASSWORD =findViewById(R.id.register_password);
@@ -70,30 +70,29 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
     // Spinner to select organization
-    void OrganizationSpinner(){
-        String  organization [] = { "VI" };
-        ArrayAdapter arrayAdapter = new ArrayAdapter(RegistrationActivity.this,R.layout.support_simple_spinner_dropdown_item,organization);
-        ORGANIZATION.setAdapter(arrayAdapter);
-    }
+//    void OrganizationSpinner(){
+//        String  organization [] = { "VI" };
+//        ArrayAdapter arrayAdapter = new ArrayAdapter(RegistrationActivity.this,R.layout.support_simple_spinner_dropdown_item,organization);
+//        ORGANIZATION.setAdapter(arrayAdapter);
+//    }
 
 
 
     // Spinner to designation
-    /*void DesignationSpinner(){
-     String designation [] = {"Mr. Subhash Tatale","Mr. Atul Kulkarni",};
+    void DesignationSpinner(){
+     String designation [] = {"--SELECT DESIGNATION","USER","ADMIN",};
         ArrayAdapter arrayAdapter = new ArrayAdapter(RegistrationActivity.this,R.layout.support_simple_spinner_dropdown_item,designation);
         DESIGNATION.setAdapter(arrayAdapter);
-
-    }*/
+    }
 
 
     // create button on click listener
     private  class CreateonclickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            String organization = (String) ORGANIZATION.getSelectedItem();
+//            String organization = (String) ORGANIZATION.getSelectedItem();
             String phone = PHONE.getText().toString().trim();
-            String designation = DESIGNATION.getText().toString().trim();
+            String designation = DESIGNATION.getSelectedItem().toString();
             String email = EMAIL.getText().toString().trim();
             String password = PASSWORD.getText().toString().trim();
             String name = NAME.getText().toString().trim();
@@ -107,15 +106,11 @@ public class RegistrationActivity extends AppCompatActivity {
                 PASSWORD.setError("PASSWORD SHOULD BE Atleast 6 digits ");
                 PASSWORD.setFocusable(true);
 
-            }else  if (designation.isEmpty()) {
-                DESIGNATION.setError("Enter Designation");
-                DESIGNATION.setFocusable(true);
-
             }else if (!Patterns.PHONE.matcher(phone).matches() && phone.length() ==10){
                 PHONE.setError("Enter Correct Phone Number");
                 PHONE.setFocusable(true);
             } else {
-                registeruser(name,email,password,organization,designation,phone);
+                registeruser(name,email,password,designation,phone);
 
             }
 
@@ -135,7 +130,7 @@ public class RegistrationActivity extends AppCompatActivity {
     //Register user method (add to async task class)
 
 
-    private void registeruser(final String Name, final String Email , String Password, final String Organization, final String Designation , final String Phone){
+    private void registeruser(final String Name, final String Email , String Password,  final String Designation , final String Phone){
 
      runOnUiThread(new Runnable() {
          @Override
