@@ -1,6 +1,7 @@
 package com.example.admin.barcodescanneractivity.Admin;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
@@ -49,7 +50,7 @@ public class ViewData extends AppCompatActivity {
         }
     }
 
-    private class DOBPickUpListener implements DatePickerDialog.OnDateSetListener {
+     private class DOBPickUpListener implements DatePickerDialog.OnDateSetListener {
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
             Date.setText( dayOfMonth + "-" + (month+1) + "-"+year);

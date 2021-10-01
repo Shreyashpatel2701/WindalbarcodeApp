@@ -1,13 +1,16 @@
 package com.example.admin.barcodescanneractivity;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -15,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 
+import com.example.admin.barcodescanneractivity.Admin.ViewData;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
@@ -31,6 +35,7 @@ public class vehicleinformation extends AppCompatActivity {
     EditText vehicle_number;
     EditText invoice_number;
     EditText part_quantity;
+    ImageButton datepickerdialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,6 +46,7 @@ public class vehicleinformation extends AppCompatActivity {
 
         init();
         spinner_parts();
+        datepickerdialog.setOnClickListener(new BtnDatePickerDialogClickListener());
         Continue.setOnClickListener(new btncontinue());
 
 
@@ -82,7 +88,7 @@ public class vehicleinformation extends AppCompatActivity {
        vehicle_number = findViewById(R.id.Vehicle_number);
        invoice_number = findViewById(R.id.invoice_number);
        part_quantity = findViewById(R.id.et_part_quantity);
-
+       datepickerdialog = findViewById(R.id.btn_datepickerdialog);
     }
 
 
@@ -159,5 +165,26 @@ public class vehicleinformation extends AppCompatActivity {
         adapter_parts.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         parts_info.setAdapter(adapter_parts);
     }
+    private class BtnDatePickerDialogClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
 
+            DatePickerDialog dobPickerDialog =
+                    new DatePickerDialog(
+                            vehicleinformation.this,
+                            new DOBPickUpListener(),
+                            2021,
+                            9,
+                            1
+                    );
+            dobPickerDialog.show();
+        }
+    }
+
+    private class DOBPickUpListener implements DatePickerDialog.OnDateSetListener {
+        @Override
+        public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+            et_date.setText( dayOfMonth + "-" + (month+1) + "-"+year);
+        }
+    }
 }
