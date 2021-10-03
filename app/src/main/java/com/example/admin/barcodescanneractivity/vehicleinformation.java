@@ -97,9 +97,12 @@ public class vehicleinformation extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             parts_selected = parts_info.getSelectedItem().toString();
-            if(et_date.getText().toString()==""||vehicle_number.getText().toString()==""||invoice_number.getText().toString()==""||part_quantity.getText().toString()==""){
-                Toast.makeText(vehicleinformation.this, "Please enter all values", Toast.LENGTH_SHORT).show();
-            }
+
+
+
+//            if(et_date.getText().toString()==""||vehicle_number.getText().toString()==""||invoice_number.getText().toString()==""||part_quantity.getText().toString()==""){
+//                Toast.makeText(vehicleinformation.this, "Please enter all values", Toast.LENGTH_SHORT).show();
+//            }
 
             if(parts_selected.matches("OLD WAGON")){
                 selectedPartName = "SJ10081";
@@ -127,9 +130,17 @@ public class vehicleinformation extends AppCompatActivity {
             }
 
 
-            if (parts_selected.matches("--Select parts--")){
+//            if (parts_selected.matches("--Select parts--")){
+//                Toast.makeText(vehicleinformation.this,"Please select parts",Toast.LENGTH_SHORT).show();
+//            }
+            if(et_date.getText().toString().equals("")||vehicle_number.getText().toString().equals("")||invoice_number.getText().toString().equals("")||part_quantity.getText().toString().equals("")){
+                Toast.makeText(vehicleinformation.this, "Please enter all values", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                if (parts_selected.equals("--Select parts--")){
                 Toast.makeText(vehicleinformation.this,"Please select parts",Toast.LENGTH_SHORT).show();
-            }else {
+                return;
+            }
 
                 SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
 
