@@ -18,8 +18,8 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="395dp"
-        android:layout_marginTop="70dp"
+        android:layout_height="470dp"
+        android:layout_marginTop="40dp"
         android:backgroundTint="#F73535"
         app:cardCornerRadius="50dp">
 
@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginLeft="50dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="60dp"
             android:layout_marginRight="50dp"
             android:backgroundTint="#ffffff"
             android:text="VIEW DATA "
@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginLeft="50dp"
-            android:layout_marginTop="170dp"
+            android:layout_marginTop="130dp"
             android:layout_marginRight="50dp"
             android:backgroundTint="#ffffff"
             android:text="VIEW USERS "
@@ -52,7 +52,7 @@
             android:id="@+id/btn_edituserdata"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginTop="240dp"
+            android:layout_marginTop="200dp"
             android:backgroundTint="#ffffff"
             android:layout_marginRight="50dp"
             android:layout_marginLeft="50dp"
@@ -61,5 +61,28 @@
 
         </Button>
 
+        <Button
+            android:id="@+id/btn_addpartdata"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="270dp"
+            android:backgroundTint="#ffffff"
+            android:layout_marginRight="50dp"
+            android:layout_marginLeft="50dp"
+            android:text="ADD PARTS"
+            android:textColor="#E74C3C">
+        </Button>
+
+        <Button
+            android:id="@+id/btn_addplantdata"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="340dp"
+            android:backgroundTint="#ffffff"
+            android:layout_marginRight="50dp"
+            android:layout_marginLeft="50dp"
+            android:text="ADD PLANT"
+            android:textColor="#E74C3C">
+        </Button>
     </androidx.cardview.widget.CardView>
 </LinearLayout>
