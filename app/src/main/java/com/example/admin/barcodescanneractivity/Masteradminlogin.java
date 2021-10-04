@@ -28,7 +28,8 @@ public class Masteradminlogin extends AppCompatActivity {
             masteradminpassword.setError("wrong password");
             masteradminpassword.setFocusable(true);
         }else {
-
+              Intent intent = new Intent(this,Addplants.class);
+              startActivity(intent);
         }
     }
 

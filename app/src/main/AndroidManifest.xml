@@ -16,7 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Admin.demo"></activity>
+        <activity android:name=".Admin.Addparts"></activity>
+        <activity android:name=".Masteradminlogin"></activity>
+        <activity android:name=".Admin.Addplants"></activity>
         <activity android:name=".Admin.ViewData"></activity>
         <activity
             android:name=".sp2"
