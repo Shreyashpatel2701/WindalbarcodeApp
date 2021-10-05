@@ -7,21 +7,23 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <EditText
-        android:id="@+id/edtCity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+
 
     <LinearLayout
+        android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
+            android:backgroundTint="#6DC43E"
+            android:textColor="@color/white"
             android:layout_weight="1"
             android:id="@+id/btnAdd"
             android:text="Add"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <Button
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/white"
             android:layout_weight="1"
             android:id="@+id/btnDelete"
             android:text="Delete"
