@@ -2,9 +2,11 @@ package com.example.admin.barcodescanneractivity;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -14,17 +16,22 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 
 import com.example.admin.barcodescanneractivity.Admin.ViewData;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 public class vehicleinformation extends AppCompatActivity {
     public String selectedPartName;
@@ -36,6 +43,15 @@ public class vehicleinformation extends AppCompatActivity {
     EditText invoice_number;
     EditText part_quantity;
     ImageButton datepickerdialog;
+    Spinner selectParts;
+    Button codename;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    ArrayList<String> array = new ArrayList<String>();
+    //    String parts[]={};
+    String[] stringArray={};
+    String selected_parts;
+    ProgressDialog dialog;
+    String part_code;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,12 +61,16 @@ public class vehicleinformation extends AppCompatActivity {
 
 
         init();
+//         dialog = ProgressDialog.show(vehicleinformation.this, "",
+//                "Loading. Please wait...", true);
+//        dialog.show();
+
         spinner_parts();
         datepickerdialog.setOnClickListener(new BtnDatePickerDialogClickListener());
         Continue.setOnClickListener(new btncontinue());
 
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        //FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("chakan")
                 .document("supervisor")
                 .collection("all supervisors")
@@ -64,6 +84,7 @@ public class vehicleinformation extends AppCompatActivity {
                 });
 
 
+        //dialog.dismiss();
 
         et_date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,12 +104,14 @@ public class vehicleinformation extends AppCompatActivity {
 
     void init(){
        Continue = findViewById(R.id.btn_continue);
-       parts_info = findViewById(R.id.parts_spinner);
+       //parts_info = findViewById(R.id.parts_spinner);
        et_date = findViewById(R.id.et_date);
        vehicle_number = findViewById(R.id.Vehicle_number);
        invoice_number = findViewById(R.id.invoice_number);
        part_quantity = findViewById(R.id.et_part_quantity);
        datepickerdialog = findViewById(R.id.btn_datepickerdialog);
+       selectParts = findViewById(R.id.parts_spinner);
+
     }
 
 
@@ -96,72 +119,56 @@ public class vehicleinformation extends AppCompatActivity {
     private class btncontinue implements View.OnClickListener{
         @Override
         public void onClick(View view) {
-            parts_selected = parts_info.getSelectedItem().toString();
+            //parts_selected = parts_info.getSelectedItem().toString();
+            selected_parts = selectParts.getSelectedItem().toString();
 
 
-
-//            if(et_date.getText().toString()==""||vehicle_number.getText().toString()==""||invoice_number.getText().toString()==""||part_quantity.getText().toString()==""){
-//                Toast.makeText(vehicleinformation.this, "Please enter all values", Toast.LENGTH_SHORT).show();
-//            }
-
-            if(parts_selected.matches("OLD WAGON")){
-                selectedPartName = "SJ10081";
-            }
-            if(parts_selected.matches("NEW WAGON")){
-                selectedPartName = "SJ25659P21";
-            }
-            if(parts_selected.matches("SSO OLD")){
-                selectedPartName = "SJ30237";
-            }
-            if(parts_selected.matches("SSO NEW")){
-                selectedPartName = "SJ30238";
-            }
-            if(parts_selected.matches("28 HP FRAME")){
-                selectedPartName = "SJ32344P21";
-            }
-            if(parts_selected.matches("36 HP FRAME")){
-                selectedPartName = "SJ26990P21";
-            }
-            if(parts_selected.matches("3-D FRAME")){
-                selectedPartName = "SJ26439P21";
-            }
-            if(parts_selected.matches("UTUL FRAME")){
-                selectedPartName = "SJ30398P21";
-            }
-
-
-//            if (parts_selected.matches("--Select parts--")){
-//                Toast.makeText(vehicleinformation.this,"Please select parts",Toast.LENGTH_SHORT).show();
-//            }
             if(et_date.getText().toString().equals("")||vehicle_number.getText().toString().equals("")||invoice_number.getText().toString().equals("")||part_quantity.getText().toString().equals("")){
                 Toast.makeText(vehicleinformation.this, "Please enter all values", Toast.LENGTH_SHORT).show();
             }
             else {
-                if (parts_selected.equals("--Select parts--")){
+                if (selected_parts.equals("--Select parts--")){
                 Toast.makeText(vehicleinformation.this,"Please select parts",Toast.LENGTH_SHORT).show();
                 return;
             }
+                db.collection("chakan")
+                        .document("parts")
+                        .collection("all parts")
+                        .whereEqualTo("name",selected_parts)
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
+                                for(DocumentSnapshot document: queryDocumentSnapshots.getDocuments()){
+                                    Toast.makeText(vehicleinformation.this, document.getData().get("code").toString(), Toast.LENGTH_SHORT).show();
+                                    part_code = document.getData().get("code").toString();
+                                }
+                                selectedPartName = part_code;
+                                SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
 
-                SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
+                                SharedPreferences.Editor myEdit = sharedPreferences.edit();
 
-                SharedPreferences.Editor myEdit = sharedPreferences.edit();
-
-                myEdit.putInt("start_count",0 );
-                myEdit.putInt("correct",0);
-                myEdit.putInt("wrong",0);
-                myEdit.commit();
+                                myEdit.putInt("start_count",0 );
+                                myEdit.putInt("correct",0);
+                                myEdit.putInt("wrong",0);
+                                myEdit.commit();
 
 
-                Toast.makeText(vehicleinformation.this,parts_selected,Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(vehicleinformation.this, ScanCodeActivity.class);
-                intent.putExtra("selectedPartName", selectedPartName);
-                intent.putExtra("quantity", part_quantity.getText().toString());
-                intent.putExtra("vehicle_number", vehicle_number.getText().toString());
-                intent.putExtra("invoice_number", invoice_number.getText().toString());
-                intent.putExtra("date", et_date.getText().toString());
+                                //Toast.makeText(vehicleinformation.this,parts_selected,Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(vehicleinformation.this, ScanCodeActivity.class);
+                                intent.putExtra("selectedPartName", selectedPartName);
+                                intent.putExtra("quantity", part_quantity.getText().toString());
+                                intent.putExtra("vehicle_number", vehicle_number.getText().toString());
+                                intent.putExtra("invoice_number", invoice_number.getText().toString());
+                                intent.putExtra("date", et_date.getText().toString());
 
 
-                startActivity(intent);
+                                startActivity(intent);
+
+                            }
+                        });
+
+
             }
 
 
@@ -170,12 +177,49 @@ public class vehicleinformation extends AppCompatActivity {
         }
     }
 
+
+
     void spinner_parts(){
-        String[] parts = {"--Select parts--","OLD WAGON","NEW WAGON","SSO OLD","SSO NEW","28 HP FRAME","36 HP FRAME","3-D FRAME","UTUL FRAME"};
-        ArrayAdapter adapter_parts = new ArrayAdapter(this,android.R.layout.simple_spinner_item,parts);
-        adapter_parts.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        parts_info.setAdapter(adapter_parts);
+
+
+        array.add("--Select parts--");
+
+        db.collection("chakan")
+                .document("parts")
+                .collection("all parts")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
+                        for(DocumentSnapshot document: queryDocumentSnapshots.getDocuments()){
+                            Log.e("type", String.valueOf(document.getData().get("name")));
+                            array.add(String.valueOf(document.getData().get("name")));
+                        }
+                        Log.e("type",array.toString());
+//                        parts = array.toArray(array);
+                        stringArray = array.toArray(new String[0]);
+                        Log.e("converted shit",stringArray.toString());
+                        ArrayAdapter adapter_parts = new ArrayAdapter(vehicleinformation.this,android.R.layout.simple_spinner_item,stringArray);
+                        adapter_parts.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        selectParts.setAdapter(adapter_parts);
+                    }
+
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        if(e!=null){
+                            Toast.makeText(vehicleinformation.this, "Cant fetch parts", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+
+
+
     }
+
+
     private class BtnDatePickerDialogClickListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
