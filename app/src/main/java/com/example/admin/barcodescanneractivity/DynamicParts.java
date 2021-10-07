@@ -121,6 +121,4 @@ public class DynamicParts extends AppCompatActivity {
 //        dialog.dismiss();
 
     }
-
-
 }

@@ -1,6 +1,7 @@
 package com.example.admin.barcodescanneractivity.Admin;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,17 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.admin.barcodescanneractivity.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -38,13 +45,13 @@ public class Addplants extends AppCompatActivity {
 
         init();
 
-       addplants();
-        mAdapterCities = new ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_list_item_1,
-                mParts
-        );
-        mListViewCities.setAdapter(mAdapterCities);
+         fetchplants();
+//        mAdapterCities = new ArrayAdapter<String>(
+//                this,
+//                android.R.layout.simple_list_item_1,
+//                mParts
+//        );
+//        mListViewCities.setAdapter(mAdapterCities);
 
 
         mBtnAdd.setOnClickListener(new BtnAddClickListener());
@@ -88,11 +95,28 @@ public class Addplants extends AppCompatActivity {
 
     }
 
+    private void fetchplants(){
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("plants").get().addOnSuccessListener(
+                new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
+                        for (DocumentSnapshot snapshot: queryDocumentSnapshots.getDocuments()){
+
+                        }
+                    }
+                }
+        ).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+    }
+
     private  void addplants(){
-        mParts.add("BHOPAL");
-        mParts.add("CHAKAN");
-        mParts.add("NAGPUR");
-        mParts.add("BHOSRI");
+
     }
     private void init() {
         mParts = new ArrayList<>();

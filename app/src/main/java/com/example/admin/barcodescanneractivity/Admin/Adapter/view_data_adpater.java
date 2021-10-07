@@ -51,8 +51,6 @@ public class view_data_adpater extends RecyclerView.Adapter {
         }
 
     }
-
-
     @Override
     public int getItemCount() {
         if (mArraylist.size() == 0){
