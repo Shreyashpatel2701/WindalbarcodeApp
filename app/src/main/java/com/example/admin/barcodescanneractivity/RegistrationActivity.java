@@ -80,7 +80,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
     // Spinner to designation
     void DesignationSpinner(){
-     String designation [] = {"--SELECT DESIGNATION","USER","ADMIN",};
+     String designation [] = {"--SELECT DESIGNATION","USER","ADMIN","SUPERVISOR"};
         ArrayAdapter arrayAdapter = new ArrayAdapter(RegistrationActivity.this,R.layout.support_simple_spinner_dropdown_item,designation);
         DESIGNATION.setAdapter(arrayAdapter);
     }
@@ -111,7 +111,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 PHONE.setFocusable(true);
             } else {
                 registeruser(name,email,password,designation,phone);
-
             }
 
         }

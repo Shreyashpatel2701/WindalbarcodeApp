@@ -28,7 +28,7 @@ import java.util.Locale;
 
 public class Addplants extends AppCompatActivity {
     private ListView mListViewCities;
-    private ArrayList<String> mParts;
+    private ArrayList<String> mPlants;
      Button ADDPLANT;
 
       EditText addplantname;
@@ -46,16 +46,7 @@ public class Addplants extends AppCompatActivity {
         init();
 
          fetchplants();
-//        mAdapterCities = new ArrayAdapter<String>(
-//                this,
-//                android.R.layout.simple_list_item_1,
-//                mParts
-//        );
-//        mListViewCities.setAdapter(mAdapterCities);
-
-
-        mBtnAdd.setOnClickListener(new BtnAddClickListener());
-
+         mBtnAdd.setOnClickListener(new BtnAddClickListener());
     }
 
     private class BtnAddClickListener implements View.OnClickListener {
@@ -76,12 +67,12 @@ public class Addplants extends AppCompatActivity {
             ADDPLANT.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (mParts.contains(addplantname.getText().toString().toUpperCase(Locale.ROOT))){
+                    if (mPlants.contains(addplantname.getText().toString().toUpperCase(Locale.ROOT))){
                         Toast.makeText(Addplants.this,"THIS PART IS ALREADY ADDED ",Toast.LENGTH_LONG).show();
                         alertDialog.dismiss();
                     }else {
                         Toast.makeText(Addplants.this,addplantname.getText().toString() + "part added successfully",Toast.LENGTH_LONG).show();
-                        mParts.add(addplantname.getText().toString().toUpperCase(Locale.ROOT));
+                        mPlants.add(addplantname.getText().toString().toUpperCase(Locale.ROOT));
                         alertDialog.dismiss();
                     }
 
@@ -102,7 +93,7 @@ public class Addplants extends AppCompatActivity {
                     @Override
                     public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
                         for (DocumentSnapshot snapshot: queryDocumentSnapshots.getDocuments()){
-
+                            mPlants.add(String.valueOf(snapshot.getData().get("name")));
                         }
                     }
                 }
@@ -119,7 +110,7 @@ public class Addplants extends AppCompatActivity {
 
     }
     private void init() {
-        mParts = new ArrayList<>();
+        mPlants = new ArrayList<>();
         mBtnAdd = findViewById(R.id.addplants);
         mListViewCities = findViewById(R.id.listViewCities);
 
