@@ -3,11 +3,11 @@
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-android:orientation="vertical">
+    android:background="#FFEDED"
+android:orientation="vertical"
+    android:gravity="center">
 
 <Button
-
-    android:layout_marginTop="175dp"
 
     android:drawableStart="@drawable/ic_edit"
     android:drawableLeft="@drawable/ic_edit"
@@ -44,7 +44,6 @@ android:orientation="vertical">
 </Button>
 
 <Button
-    android:background="@drawable/buttonss"
     android:backgroundTint="@color/colorPrimary"
     android:drawableStart="@drawable/ic_logout"
     android:drawableLeft="@drawable/ic_logout"
@@ -52,6 +51,7 @@ android:orientation="vertical">
     android:id="@+id/export_to_excel_admin"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="15dp"
     android:text="EXPORT TO EXCEL"
     android:layout_gravity="center"
     android:textAlignment="center"
