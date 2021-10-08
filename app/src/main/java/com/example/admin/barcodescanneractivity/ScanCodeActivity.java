@@ -35,7 +35,8 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
     int number;
     String selectedPartName;
     int quantity;
-    String vehicle_number, invoice_number,date;
+    String vehicle_number, invoice_number,date,part_name;
+    String month_name;
     int s1;
     TextView scannedItems_txt;
     TextView totalItems_txt;
@@ -68,6 +69,9 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
         vehicle_number = intent.getStringExtra("vehicle_number");
         invoice_number = intent.getStringExtra("invoice_number");
         date = intent.getStringExtra("date");
+        month_name = intent.getStringExtra("month");
+        part_name = intent.getStringExtra("part_name");
+
 
 
 
@@ -269,6 +273,8 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
     }
 
     void summarydialog(){
+        correct = quantity-wrong;
+
         AlertDialog.Builder builder = new AlertDialog.Builder(ScanCodeActivity.this);
         ViewGroup viewGroup = findViewById(android.R.id.content);
         final View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.summarydialog, viewGroup, false);
@@ -305,10 +311,14 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                 scanner_data.put("date",date );
                 scanner_data.put("vehicle_number", vehicle_number);
                 scanner_data.put("invoice_number", invoice_number);
-                scanner_data.put("part_name", selectedPartName);
+                scanner_data.put("part_code", selectedPartName);
                 scanner_data.put("part_quantity", quantity);
                 scanner_data.put("correct_barcode", correct);
                 scanner_data.put("wrong_barcode", wrong);
+                scanner_data.put("month",month_name);
+                scanner_data.put("plant","chakan");
+                scanner_data.put("part_name",part_name);
+
 
                 db.collection("chakan")
                         .document("data")

@@ -31,7 +31,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class vehicleinformation extends AppCompatActivity {
     public String selectedPartName;
@@ -51,7 +53,8 @@ public class vehicleinformation extends AppCompatActivity {
     String[] stringArray={};
     String selected_parts;
     ProgressDialog dialog;
-    String part_code;
+    String part_code,month_name;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,23 +68,22 @@ public class vehicleinformation extends AppCompatActivity {
 //                "Loading. Please wait...", true);
 //        dialog.show();
 
+        progressDialog = new ProgressDialog(vehicleinformation.this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
+
+        Calendar cal=Calendar.getInstance();
+        SimpleDateFormat month_date = new SimpleDateFormat("MMMM");
+        month_name = month_date.format(cal.getTime());
+        Toast.makeText(vehicleinformation.this, month_name.toString(), Toast.LENGTH_SHORT).show();
+
+
         spinner_parts();
         datepickerdialog.setOnClickListener(new BtnDatePickerDialogClickListener());
         Continue.setOnClickListener(new btncontinue());
 
-
-        //FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("chakan")
-                .document("supervisor")
-                .collection("all supervisors")
-                .document("LX3LG0SYveLt8WsXjlgk")
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        Toast.makeText(vehicleinformation.this, documentSnapshot.getData().toString(), Toast.LENGTH_SHORT).show();
-                    }
-                });
 
 
         //dialog.dismiss();
@@ -161,6 +163,8 @@ public class vehicleinformation extends AppCompatActivity {
                                 intent.putExtra("vehicle_number", vehicle_number.getText().toString());
                                 intent.putExtra("invoice_number", invoice_number.getText().toString());
                                 intent.putExtra("date", et_date.getText().toString());
+                                intent.putExtra("month", month_name);
+                                intent.putExtra("part_name", selected_parts);
 
 
                                 startActivity(intent);
@@ -202,6 +206,7 @@ public class vehicleinformation extends AppCompatActivity {
                         ArrayAdapter adapter_parts = new ArrayAdapter(vehicleinformation.this,android.R.layout.simple_spinner_item,stringArray);
                         adapter_parts.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         selectParts.setAdapter(adapter_parts);
+                        progressDialog.dismiss();
                     }
 
                 })
