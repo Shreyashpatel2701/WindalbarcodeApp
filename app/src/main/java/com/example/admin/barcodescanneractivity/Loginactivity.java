@@ -3,6 +3,7 @@ package com.example.admin.barcodescanneractivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -45,10 +46,16 @@ public class Loginactivity extends AppCompatActivity {
     public class btnloginonclicklistener implements View.OnClickListener{
         @Override
         public void onClick(View view) {
+            if (!EMAIL.getText().toString().matches(Patterns.EMAIL_ADDRESS.toString())){
+                EMAIL.setError("Invalid email");
+                EMAIL.setFocusable(true);
+            }else if (PASSWORD.getText().toString().length() < 6 ){
+                PASSWORD.setError("enter correct password");
+                PASSWORD.setFocusable(true);
+            }
 
               Login_auth(EMAIL.getText().toString(),PASSWORD.getText().toString());
-//            Intent intent = new Intent(Loginactivity.this,vehicleinformation.class);
-//            startActivity(intent);
+
         }
     }
 
@@ -68,6 +75,7 @@ public class Loginactivity extends AppCompatActivity {
               if (authResult.getAdditionalUserInfo().isNewUser()){
 
                   Toast.makeText(Loginactivity.this,"Register first",Toast.LENGTH_LONG).show();
+
               }
 
                 FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
