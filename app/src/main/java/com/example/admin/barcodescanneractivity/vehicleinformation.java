@@ -77,7 +77,7 @@ public class vehicleinformation extends AppCompatActivity {
         Calendar cal=Calendar.getInstance();
         SimpleDateFormat month_date = new SimpleDateFormat("MMMM");
         month_name = month_date.format(cal.getTime());
-        Toast.makeText(vehicleinformation.this, month_name.toString(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(vehicleinformation.this, month_name.toString(), Toast.LENGTH_SHORT).show();
 
 
         spinner_parts();
@@ -153,7 +153,7 @@ public class vehicleinformation extends AppCompatActivity {
                                 myEdit.putInt("start_count",0 );
                                 myEdit.putInt("correct",0);
                                 myEdit.putInt("wrong",0);
-                                myEdit.commit();
+                                myEdit.apply();
 
 
                                 //Toast.makeText(vehicleinformation.this,parts_selected,Toast.LENGTH_LONG).show();
@@ -168,6 +168,7 @@ public class vehicleinformation extends AppCompatActivity {
 
 
                                 startActivity(intent);
+                                finish();
 
                             }
                         });
