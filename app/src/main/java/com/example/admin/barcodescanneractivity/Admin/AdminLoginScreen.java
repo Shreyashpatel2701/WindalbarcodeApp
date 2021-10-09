@@ -49,9 +49,9 @@ public class AdminLoginScreen extends AppCompatActivity {
             }else if (PASSWORD.getText().toString().length() < 6 ){
                 PASSWORD.setError("enter correct password");
                 PASSWORD.setFocusable(true);
-            }
+            }else {
                 admin_login_auth();
-
+            }
 
 
         }
