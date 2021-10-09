@@ -50,8 +50,13 @@ public class AdminLoginScreen extends AppCompatActivity {
                 PASSWORD.setError("enter correct password");
                 PASSWORD.setFocusable(true);
             }else {
+            }
+             //   admin_login_auth();
+            else {
                 admin_login_auth();
             }
+            }
+
 
 
         }

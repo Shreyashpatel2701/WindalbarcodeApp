@@ -1,5 +1,6 @@
 package com.example.admin.barcodescanneractivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +28,7 @@ public class Loginactivity extends AppCompatActivity {
       EditText EMAIL,PASSWORD;
     Button Login;
     Spinner plant_selection;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,15 +48,39 @@ public class Loginactivity extends AppCompatActivity {
     public class btnloginonclicklistener implements View.OnClickListener{
         @Override
         public void onClick(View view) {
-            if (!EMAIL.getText().toString().matches(Patterns.EMAIL_ADDRESS.toString())){
-                EMAIL.setError("Invalid email");
-                EMAIL.setFocusable(true);
-            }else if (PASSWORD.getText().toString().length() < 6 ){
-                PASSWORD.setError("enter correct password");
+            if(EMAIL.getText().toString().isEmpty()){
+                EMAIL.setError("Invalid Email");
                 PASSWORD.setFocusable(true);
             }
+            else if (!Patterns.EMAIL_ADDRESS.matcher(EMAIL.getText().toString()).matches()) {
+                EMAIL.setError("Invalid Email");
+                PASSWORD.setFocusable(true);
 
-              Login_auth(EMAIL.getText().toString(),PASSWORD.getText().toString());
+            }
+//            if (!EMAIL.getText().toString().matches(Patterns.EMAIL_ADDRESS.toString())){
+//                EMAIL.setError("Invalid email");
+//                EMAIL.setFocusable(true);
+//            }
+            else if (PASSWORD.length() < 6){
+                PASSWORD.setError("PASSWORD SHOULD BE Atleast 6 digits ");
+                PASSWORD.setFocusable(true);
+
+            }else if(plant_selection.getSelectedItem().toString().matches("--Select plants--")){
+                Toast.makeText(Loginactivity.this, "Please select plant", Toast.LENGTH_SHORT).show();
+            }else{
+                progressDialog = new ProgressDialog(Loginactivity.this);
+                progressDialog.setCancelable(false);
+                progressDialog.setMessage("Logging In");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.show();
+                Login_auth(EMAIL.getText().toString(),PASSWORD.getText().toString());
+            }
+//            else if (PASSWORD.getText().toString().length() < 6 ){
+//                PASSWORD.setError("enter correct password");
+//                PASSWORD.setFocusable(true);
+//            }
+
+
 
         }
     }
@@ -87,6 +113,7 @@ public class Loginactivity extends AppCompatActivity {
                      public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
                          if (!queryDocumentSnapshots.getDocuments().isEmpty()) {
                                Log.e("sucess","shreyash");
+                               progressDialog.dismiss();
                              Intent intent = new Intent(Loginactivity.this, vehicleinformation.class);
                              startActivity(intent);
                              Toast.makeText(Loginactivity.this, "Registered User", Toast.LENGTH_LONG).show();

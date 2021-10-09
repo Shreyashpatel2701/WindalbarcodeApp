@@ -112,14 +112,14 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                     @Override
                     public void onClick(View view) {
 
-                        alertDialog.dismiss();
+
                         //correct++;
                         correct = sh.getInt("correct",0 );
                         correct++;
                         SharedPreferences.Editor myEdit = sh.edit();
                         myEdit.putInt("correct",correct);
                         myEdit.apply();
-
+                        alertDialog.dismiss();
                         summarydialog();
 
 
@@ -127,6 +127,7 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                     }
                 });
                 alertDialog.setCanceledOnTouchOutside(false);
+                alertDialog.setCancelable(false);
                 alertDialog.show();
 
             }else{
@@ -152,19 +153,22 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                         @Override
                         public void onClick(View view) {
 
-                            alertDialog.dismiss();
+
                             //wrong++;
                             wrong = sh.getInt("wrong",0 );
                             wrong++;
                             SharedPreferences.Editor myEdit = sh.edit();
                             myEdit.putInt("wrong",wrong);
                             myEdit.apply();
+                            alertDialog.dismiss();
                             summarydialog();
+
                             //onBackPressed();
 
                         }
                     });
                     alertDialog.setCanceledOnTouchOutside(false);
+                    alertDialog.setCancelable(false);
                     alertDialog.show();
 
                 }else {
@@ -174,7 +178,7 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
 
 
         }else{
-            Toast.makeText(ScanCodeActivity.this, "Scanning not done", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(ScanCodeActivity.this, "Scanning not done", Toast.LENGTH_SHORT).show();
 
             if(result.getText().matches(selectedPartName)) {
 
@@ -214,6 +218,7 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                 }
             });
             alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.setCancelable(false);
             alertDialog.show();
 
         }else{
@@ -231,9 +236,9 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                 totalItems_txt.setText(String.valueOf(quantity));
 
 
-                SmsManager mySmsManager = SmsManager.getDefault();
-                mySmsManager.sendTextMessage("7447297382", null, "Part with wrongly applied barcode found in vehicle no. "+vehicle_number.toString(), null, null);
-                Toast.makeText(this, "SMS sent.", Toast.LENGTH_LONG).show();
+//                SmsManager mySmsManager = SmsManager.getDefault();
+//                mySmsManager.sendTextMessage("7447297382", null, "Part with wrongly applied barcode found in vehicle no. "+vehicle_number.toString(), null, null);
+//                Toast.makeText(this, "SMS sent.", Toast.LENGTH_LONG).show();
 
                 dialogView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -256,6 +261,8 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                     }
                 });
                 alertDialog.setCanceledOnTouchOutside(false);
+                alertDialog.setCancelable(false);
+
                 alertDialog.show();
 
             }else {
@@ -281,6 +288,7 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
         builder.setView(dialogView);
         final AlertDialog alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.setCancelable(false);
 
         summary_date =dialogView.findViewById(R.id.summary_date);
         summary_vehiclenumber = dialogView.findViewById(R.id.summary_vehiclenumber);
@@ -301,6 +309,7 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
 
 
 
+
         dialogView.findViewById(R.id.ok_summary).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -312,9 +321,9 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                 scanner_data.put("vehicle_number", vehicle_number);
                 scanner_data.put("invoice_number", invoice_number);
                 scanner_data.put("part_code", selectedPartName);
-                scanner_data.put("part_quantity", quantity);
-                scanner_data.put("correct_barcode", correct);
-                scanner_data.put("wrong_barcode", wrong);
+                scanner_data.put("part_quantity", String.valueOf(quantity));
+                scanner_data.put("correct_barcode", String.valueOf(correct));
+                scanner_data.put("wrong_barcode", String.valueOf(wrong));
                 scanner_data.put("month",month_name);
                 scanner_data.put("plant","chakan");
                 scanner_data.put("part_name",part_name);
@@ -328,6 +337,10 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                             @Override
                             public void onSuccess(@NonNull DocumentReference documentReference) {
                                 Toast.makeText(ScanCodeActivity.this, "data added to database", Toast.LENGTH_LONG).show();
+                                SmsManager mySmsManager = SmsManager.getDefault();
+                                mySmsManager.sendTextMessage("+917447297382", null, "Part with wrongly applied barcode found in vehicle no. "+vehicle_number.toString()+"\n\n"+"Scanning Summary: "+"\n\n"+"Plant Name: "+"chakan"+"\n"+"Date: "+date+"\n"+"Vehicle Number: "+vehicle_number+"\n"+"Invoice Number: "+invoice_number+"\n"+"Selected Part: "+selectedPartName+"\n"+"Part Quantity: "+String.valueOf(quantity)+"\n"+"Correct Barcode: "+String.valueOf(correct)+"\n"+"Wrong Barcode: "+String.valueOf(wrong), null, null);
+                                Toast.makeText(ScanCodeActivity.this, "SMS sent.", Toast.LENGTH_LONG).show();
+
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -338,7 +351,10 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                         });
 
                 alertDialog.dismiss();
-                onBackPressed();
+               // onBackPressed();
+                Intent intent = new Intent(ScanCodeActivity.this, vehicleinformation.class);
+                startActivity(intent);
+                finish();
 
             }
         });
@@ -371,6 +387,12 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
 //    }
 
 
+    @Override
+    public void onBackPressed() {
+       // super.onBackPressed();
+        Toast.makeText(ScanCodeActivity.this, "Cannot go back! Complete the scanning",Toast.LENGTH_LONG).show();
+
+    }
 
     @Override
     protected void onPostResume() {
