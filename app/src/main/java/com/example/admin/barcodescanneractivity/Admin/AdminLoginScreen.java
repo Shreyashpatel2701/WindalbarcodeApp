@@ -49,7 +49,6 @@ public class AdminLoginScreen extends AppCompatActivity {
             }else if (PASSWORD.getText().toString().length() < 6 ){
                 PASSWORD.setError("enter correct password");
                 PASSWORD.setFocusable(true);
-            }else {
             }
              //   admin_login_auth();
             else {
@@ -60,9 +59,8 @@ public class AdminLoginScreen extends AppCompatActivity {
 
 
         }
-    }
 
-    void spinner_plants(){
+        void spinner_plants(){
         String[] parts = {"--Select plants--","Chakan","Bhpoal"};
         ArrayAdapter adapter_plants = new ArrayAdapter(this,android.R.layout.simple_spinner_item,parts);
         adapter_plants.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
