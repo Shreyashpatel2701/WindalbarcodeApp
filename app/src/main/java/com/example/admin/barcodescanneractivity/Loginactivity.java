@@ -112,7 +112,7 @@ public class Loginactivity extends AppCompatActivity {
                      @Override
                      public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
                          if (!queryDocumentSnapshots.getDocuments().isEmpty()) {
-                               Log.e("sucess","shreyash");
+
                                progressDialog.dismiss();
                              Intent intent = new Intent(Loginactivity.this, vehicleinformation.class);
                              startActivity(intent);

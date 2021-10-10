@@ -1,8 +1,11 @@
 package com.example.admin.barcodescanneractivity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -16,17 +19,23 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import com.example.admin.barcodescanneractivity.Admin.Addparts;
 import com.example.admin.barcodescanneractivity.Admin.Adminbottomnavigation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class RegistrationActivity extends AppCompatActivity {
       FirebaseAuth firebaseAuth;
@@ -36,7 +45,7 @@ public class RegistrationActivity extends AppCompatActivity {
       Spinner DESIGNATION;
       Button Create_account;
       ActionBar actionBar;
-
+       String plants;
     @Override
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +75,8 @@ public class RegistrationActivity extends AppCompatActivity {
          progressDialog = new ProgressDialog(RegistrationActivity.this);
          progressDialog.setMessage("Register");
          firebaseAuth = FirebaseAuth.getInstance();
+       @SuppressLint("WrongConstant") SharedPreferences sh = getSharedPreferences("PLANTADMIN",MODE_APPEND);
+       plants = sh.getString("plant","");
     }
 
 
@@ -80,7 +91,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
     // Spinner to designation
     void DesignationSpinner(){
-     String designation [] = {"--SELECT DESIGNATION","USER","ADMIN","SUPERVISOR"};
+     String designation [] = {"--SELECT DESIGNATION--","USER","ADMIN","SUPERVISOR"};
         ArrayAdapter arrayAdapter = new ArrayAdapter(RegistrationActivity.this,R.layout.support_simple_spinner_dropdown_item,designation);
         DESIGNATION.setAdapter(arrayAdapter);
     }
@@ -109,7 +120,11 @@ public class RegistrationActivity extends AppCompatActivity {
             }else if (!Patterns.PHONE.matcher(phone).matches() && phone.length() ==10){
                 PHONE.setError("Enter Correct Phone Number");
                 PHONE.setFocusable(true);
-            } else {
+            }else if (DESIGNATION.getSelectedItem().toString().matches("--SELECT DESIGNATION--")){
+                Toast.makeText(RegistrationActivity.this,"Select role",Toast.LENGTH_LONG).show();
+                DESIGNATION.setFocusable(true);
+            }
+            else {
                 registeruser(name,email,password,designation,phone);
             }
 
@@ -152,18 +167,18 @@ public class RegistrationActivity extends AppCompatActivity {
 
                     progressDialog.dismiss();
                        }
+
                    });
 
+                   if (Designation.matches("USER")){
+                         register_data_users(Email,Phone,Name);
+                   }else if (Designation.matches("ADMIN")){
+                        register_data_admin(Email,Phone,Name);
+                   }else if (Designation.matches("SUPERVISOR")){
+                        register_data_supervisior(Email,Phone,Name);
+                   }
 
-
-                    Intent mainIntent = new Intent(RegistrationActivity.this, Adminbottomnavigation.class);
-                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(mainIntent);
-                    finish();
-
-
-
-                  }
+               }
              }
          }).addOnFailureListener(new OnFailureListener() {
            @Override
@@ -181,4 +196,93 @@ public class RegistrationActivity extends AppCompatActivity {
                    }
          });
     }
+
+    private void register_data_admin(String Email,String Phone,String Name){
+        Map<String, Object> register_data = new HashMap<>();
+        register_data.put("email",Email );
+        register_data.put("phno",Phone );
+        register_data.put("name", Name );
+
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection(plants).document("admin").collection("all admin")
+                .add(register_data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(@NonNull DocumentReference documentReference) {
+
+                Toast.makeText(RegistrationActivity.this,"Admin added",Toast.LENGTH_LONG).show();
+
+                Intent mainIntent = new Intent(RegistrationActivity.this, Adminbottomnavigation.class);
+                mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(mainIntent);
+                finish();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+
+
+    }
+
+    private void register_data_users(String Email,String Phone,String Name){
+        Map<String, Object> register_data = new HashMap<>();
+        register_data.put("email",Email );
+        register_data.put("phno",Phone );
+        register_data.put("name", Name );
+
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection(plants).document("users").collection("all users")
+                .add(register_data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(@NonNull DocumentReference documentReference) {
+
+                Toast.makeText(RegistrationActivity.this,"User added",Toast.LENGTH_LONG).show();
+
+                Intent mainIntent = new Intent(RegistrationActivity.this, Adminbottomnavigation.class);
+                mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(mainIntent);
+                finish();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+
+    }
+
+    private void register_data_supervisior(String Email,String Phone,String Name){
+        Map<String, Object> register_data = new HashMap<>();
+        register_data.put("email",Email );
+        register_data.put("phno",Phone );
+        register_data.put("name", Name );
+
+
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection(plants).document("supervisor").collection("all supervisor")
+                .add(register_data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(@NonNull DocumentReference documentReference) {
+
+                Toast.makeText(RegistrationActivity.this,"User added",Toast.LENGTH_LONG).show();
+
+                Intent mainIntent = new Intent(RegistrationActivity.this, Adminbottomnavigation.class);
+                mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(mainIntent);
+                finish();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+    }
+
+
 }

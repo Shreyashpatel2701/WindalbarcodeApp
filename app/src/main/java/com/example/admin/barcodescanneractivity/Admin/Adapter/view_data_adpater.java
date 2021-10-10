@@ -46,9 +46,7 @@ public class view_data_adpater extends RecyclerView.Adapter {
             invoice_number = itemView.findViewById(R.id.viewdata_invoicenumber);
             date = itemView.findViewById(R.id.viewdata_date);
             part_name = itemView.findViewById(R.id.viewdata_parts_name);
-
-
-        }
+            }
 
     }
     @Override

@@ -1,6 +1,7 @@
 package com.example.admin.barcodescanneractivity.Admin;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
@@ -49,9 +51,15 @@ public class AdminLoginScreen extends AppCompatActivity {
             }else if (PASSWORD.getText().toString().length() < 6 ){
                 PASSWORD.setError("enter correct password");
                 PASSWORD.setFocusable(true);
-            }
-             //   admin_login_auth();
-            else {
+            }else if (plant_selection.getSelectedItem().toString().matches("--Select plants--")){
+
+                Toast.makeText(AdminLoginScreen.this,"PLEASE SELECT PALNT",Toast.LENGTH_LONG).show();
+                plant_selection.setFocusable(true);
+            }else {
+                SharedPreferences sharedPreferences = getSharedPreferences("PLANTADMIN",MODE_PRIVATE);
+                SharedPreferences.Editor ADMINDATA = sharedPreferences.edit();
+                ADMINDATA.putString("plant",plant_selection.getSelectedItem().toString());
+                ADMINDATA.commit();
                 admin_login_auth();
             }
             }
@@ -61,14 +69,16 @@ public class AdminLoginScreen extends AppCompatActivity {
         }
 
         void spinner_plants(){
-        String[] parts = {"--Select plants--","Chakan","Bhpoal"};
+        String[] parts = {"--Select plants--","chakan","bhpoal"};
         ArrayAdapter adapter_plants = new ArrayAdapter(this,android.R.layout.simple_spinner_item,parts);
         adapter_plants.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         plant_selection.setAdapter(adapter_plants);
+
     }
 
-    void admin_login_auth(){
+      void admin_login_auth(){
         Intent intent = new Intent(AdminLoginScreen.this, Adminbottomnavigation.class);
         startActivity(intent);
-    }
+      }
+
 }
