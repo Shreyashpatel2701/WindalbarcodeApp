@@ -2,22 +2,30 @@ package com.example.admin.barcodescanneractivity.Admin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.example.admin.barcodescanneractivity.LoginoptionsActivity;
 import com.example.admin.barcodescanneractivity.Masteradminlogin;
 import com.example.admin.barcodescanneractivity.R;
+import com.example.admin.barcodescanneractivity.ScanCodeActivity;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class AdminHomeScreen extends Fragment {
-      Button VIEWDATA,USERDATA,EDITUSERDATA,ADDPLANT,ADDPARTS;
+      Button VIEWDATA,USERDATA,EDITUSERDATA,ADDPLANT,ADDPARTS,CONFIRM;
+      AlertDialog passcodedialog;
+      TextInputEditText pascode;
 
       @Override
       public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,8 +53,36 @@ public class AdminHomeScreen extends Fragment {
      private class btnaddplant implements View.OnClickListener{
          @Override
          public void onClick(View view) {
-             Intent intent = new Intent(getActivity(), Masteradminlogin.class);
-             startActivity(intent);
+//             Intent intent = new Intent(getActivity(), Masteradminlogin.class);
+//             startActivity(intent);
+             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+             ViewGroup viewGroup = view.findViewById(android.R.id.content);
+             final View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.passcodedialog, viewGroup, false);
+             builder.setView(dialogView);
+             passcodedialog = builder.create();
+             passcodedialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+             CONFIRM = dialogView.findViewById(R.id.btn_confirm);
+             pascode = dialogView.findViewById(R.id.et_passcode);
+
+             CONFIRM.setOnClickListener(new View.OnClickListener() {
+                 @Override
+                 public void onClick(View view) {
+                     if(pascode.getText().toString().isEmpty()){
+                         Toast.makeText(getActivity(), "Please enter passcode", Toast.LENGTH_SHORT).show();
+                     }
+                     if(pascode.getText().toString().matches("1234")){
+                         Intent intent = new Intent(getActivity(), Addplants.class);
+                         startActivity(intent);
+                         passcodedialog.dismiss();
+                     }else{
+                         Toast.makeText(getActivity(), "Invalid Passcode", Toast.LENGTH_SHORT).show();
+                     }
+                 }
+             });
+
+
+             passcodedialog.show();
+
          }
 
      }

@@ -8,12 +8,13 @@ import androidx.core.content.ContextCompat;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,14 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
     TextView summary_correct;
     TextView summary_wrong;
     int correct;
+    SharedPreferences sh;
+    SharedPreferences.Editor myEdit;
+    AlertDialog alertDialog;
+    AlertDialog alertDialogWrong;
+    AlertDialog alertDialogWrongSummary;
+    AlertDialog alertDialogCorrectSummary;
+    AlertDialog alertDialogCorrect;
+    AlertDialog alertDialogSummary;
     int wrong;
     FirebaseFirestore db;
 
@@ -85,12 +94,14 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
 //        Intent intent = new Intent(ScanCodeActivity.this, compnentsinformation.class);
 //        startActivity(intent);
 
-        SharedPreferences sh = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+
+        sh = getSharedPreferences("MySharedPref", MODE_PRIVATE);
         s1 = sh.getInt("start_count",9 );
         s1++;
+        myEdit = sh.edit();
 
         if(s1==quantity){
-            Toast.makeText(ScanCodeActivity.this, "Scanning done", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(ScanCodeActivity.this, "Scanning done", Toast.LENGTH_SHORT).show();
             //onBackPressed();
             if(result.getText().matches(selectedPartName)) {
 
@@ -98,8 +109,8 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                 ViewGroup viewGroup = findViewById(android.R.id.content);
                 final View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.greendialog, viewGroup, false);
                 builder.setView(dialogView);
-                final AlertDialog alertDialog = builder.create();
-                alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                alertDialogCorrectSummary = builder.create();
+                alertDialogCorrectSummary.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
                 scannedItems_txt = dialogView.findViewById(R.id.items_scanned);
                 scannedItems_txt.setText(String.valueOf(s1));
@@ -113,22 +124,25 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                     public void onClick(View view) {
 
 
-                        //correct++;
-                        correct = sh.getInt("correct",0 );
-                        correct++;
-                        SharedPreferences.Editor myEdit = sh.edit();
-                        myEdit.putInt("correct",correct);
-                        myEdit.apply();
-                        alertDialog.dismiss();
-                        summarydialog();
+//                        //correct++;
+//                        correct = sh.getInt("correct",0 );
+//                        correct += 1;
+//                       // SharedPreferences.Editor myEdit = sh.edit();
+//                        myEdit.putInt("correct",correct);
+//                        myEdit.apply();
+                       new MyTaskCorrectSummary().execute();
+//                        Log.e("result","Task "+String.valueOf(s1)+": "+"correct: "+String.valueOf(sh.getInt("correct",0 ))+"wrong: "+String.valueOf(sh.getInt("wrong",0 )));
+//                        // Toast.makeText(ScanCodeActivity.this, "correct: "+String.valueOf(correct)+"\n"+"wrong: "+String.valueOf(wrong),Toast.LENGTH_SHORT).show();
+//                        alertDialog.dismiss();
+//                        summarydialog();
 
 
                         //onBackPressed();
                     }
                 });
-                alertDialog.setCanceledOnTouchOutside(false);
-                alertDialog.setCancelable(false);
-                alertDialog.show();
+                alertDialogCorrectSummary.setCanceledOnTouchOutside(false);
+                alertDialogCorrectSummary.setCancelable(false);
+                alertDialogCorrectSummary.show();
 
             }else{
                 if (checkSmsPermission() == true) {
@@ -136,8 +150,8 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                     ViewGroup viewGroup = findViewById(android.R.id.content);
                     final View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.reddialog, viewGroup, false);
                     builder.setView(dialogView);
-                    final AlertDialog alertDialog = builder.create();
-                    alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                    alertDialogWrongSummary = builder.create();
+                    alertDialogWrongSummary.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
                     scannedItems_txt = dialogView.findViewById(R.id.items_scanned);
                     scannedItems_txt.setText(String.valueOf(s1));
@@ -145,9 +159,9 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                     totalItems_txt.setText(String.valueOf(quantity));
 
 
-                    SmsManager mySmsManager = SmsManager.getDefault();
-                    mySmsManager.sendTextMessage("7447297382", null, "Part with wrongly applied barcode found in vehicle no. "+vehicle_number.toString(), null, null);
-                    Toast.makeText(this, "SMS sent.", Toast.LENGTH_LONG).show();
+//                    SmsManager mySmsManager = SmsManager.getDefault();
+//                    mySmsManager.sendTextMessage("7447297382", null, "Part with wrongly applied barcode found in vehicle no. "+vehicle_number.toString(), null, null);
+//                    Toast.makeText(this, "SMS sent.", Toast.LENGTH_LONG).show();
 
                     dialogView.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -155,21 +169,23 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
 
 
                             //wrong++;
-                            wrong = sh.getInt("wrong",0 );
-                            wrong++;
-                            SharedPreferences.Editor myEdit = sh.edit();
-                            myEdit.putInt("wrong",wrong);
-                            myEdit.apply();
-                            alertDialog.dismiss();
-                            summarydialog();
+//                            wrong = sh.getInt("wrong",0 );
+//                            wrong += 1;
+//                           // SharedPreferences.Editor myEdit = sh.edit();
+//                            myEdit.putInt("wrong",wrong);
+//                            myEdit.apply();
+                            new MyTaskWrongSummary().execute();
+//                            Log.e("result","Task "+String.valueOf(s1)+": "+"correct: "+String.valueOf(sh.getInt("correct",0 ))+"wrong: "+String.valueOf(sh.getInt("wrong",0 )));
+//                            alertDialog.dismiss();
+//                            summarydialog();
 
                             //onBackPressed();
 
                         }
                     });
-                    alertDialog.setCanceledOnTouchOutside(false);
-                    alertDialog.setCancelable(false);
-                    alertDialog.show();
+                    alertDialogWrongSummary.setCanceledOnTouchOutside(false);
+                    alertDialogWrongSummary.setCancelable(false);
+                    alertDialogWrongSummary.show();
 
                 }else {
                     Toast.makeText(this, "No permission for SMS", Toast.LENGTH_LONG).show();
@@ -186,8 +202,8 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
             ViewGroup viewGroup = findViewById(android.R.id.content);
             final View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.greendialog, viewGroup, false);
             builder.setView(dialogView);
-            final AlertDialog alertDialog = builder.create();
-            alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            alertDialogCorrect = builder.create();
+            alertDialogCorrect.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
 
             scannedItems_txt = dialogView.findViewById(R.id.items_scanned);
@@ -201,25 +217,27 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                 @Override
                 public void onClick(View view) {
 
-                    SharedPreferences.Editor myEdit = sh.edit();
-                    myEdit.putInt("start_count",s1);
-                    myEdit.apply();
-
-                    //correct++;
-                    correct = sh.getInt("correct",0 );
-                    correct++;
                     //SharedPreferences.Editor myEdit = sh.edit();
-                    myEdit.putInt("correct",correct);
-                    myEdit.apply();
-                    alertDialog.dismiss();
-                    finish();
-                    startActivity(getIntent());
+//                    myEdit.putInt("start_count",s1);
+//                    myEdit.apply();
+//
+//                    //correct++;
+//                    correct = sh.getInt("correct",0 );
+//                    correct += 1;
+//                    //SharedPreferences.Editor myEdit = sh.edit();
+//                    myEdit.putInt("correct",correct);
+//                    myEdit.apply();
+                    new MyTaskCorrect().execute();
+//                    Log.e("result","Task "+String.valueOf(s1)+": "+"correct: "+String.valueOf(sh.getInt("correct",0 ))+"wrong: "+String.valueOf(sh.getInt("wrong",0 )));
+//                    alertDialog.dismiss();
+//                    finish();
+//                    startActivity(getIntent());
                     //onBackPressed();
                 }
             });
-            alertDialog.setCanceledOnTouchOutside(false);
-            alertDialog.setCancelable(false);
-            alertDialog.show();
+            alertDialogCorrect.setCanceledOnTouchOutside(false);
+            alertDialogCorrect.setCancelable(false);
+            alertDialogCorrect.show();
 
         }else{
             if (checkSmsPermission() == true) {
@@ -227,8 +245,8 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                 ViewGroup viewGroup = findViewById(android.R.id.content);
                 final View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.reddialog, viewGroup, false);
                 builder.setView(dialogView);
-                final AlertDialog alertDialog = builder.create();
-                alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                alertDialogWrong = builder.create();
+                alertDialogWrong.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
                 scannedItems_txt = dialogView.findViewById(R.id.items_scanned);
                 scannedItems_txt.setText(String.valueOf(s1));
@@ -244,26 +262,28 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                     @Override
                     public void onClick(View view) {
 
-                        SharedPreferences.Editor myEdit = sh.edit();
-                        myEdit.putInt("start_count",s1);
-                        myEdit.apply();
-
-                        //wrong++;
-                        wrong = sh.getInt("wrong",0 );
-                        wrong++;
-                        //SharedPreferences.Editor myEdit = sh.edit();
-                        myEdit.putInt("wrong",wrong);
-                        myEdit.apply();
-                        alertDialog.dismiss();
-                        //onBackPressed();
-                        finish();
-                        startActivity(getIntent());
+                       // SharedPreferences.Editor myEdit = sh.edit();
+//                        myEdit.putInt("start_count",s1);
+//                        myEdit.apply();
+//
+//                        //wrong++;
+//                        wrong = sh.getInt("wrong",0 );
+//                        wrong += 1;
+//                        //SharedPreferences.Editor myEdit = sh.edit();
+//                        myEdit.putInt("wrong",wrong);
+//                        myEdit.apply();
+                        new MyTaskWrong().execute();
+                        //String str_result= new MyTaskWrong().execute().get();
+//                        Log.e("result","Task "+String.valueOf(s1)+": "+"correct: "+String.valueOf(sh.getInt("correct",0 ))+"wrong: "+String.valueOf(sh.getInt("wrong",0 )));
+//                        alertDialog.dismiss();
+//                        //onBackPressed();
+//                        finish();
+//                        startActivity(getIntent());
                     }
                 });
-                alertDialog.setCanceledOnTouchOutside(false);
-                alertDialog.setCancelable(false);
-
-                alertDialog.show();
+                alertDialogWrong.setCanceledOnTouchOutside(false);
+                alertDialogWrong.setCancelable(false);
+                alertDialogWrong.show();
 
             }else {
                 Toast.makeText(this, "No permission for SMS", Toast.LENGTH_LONG).show();
@@ -274,21 +294,21 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
 
 
 
-
+       // Toast.makeText(ScanCodeActivity.this, "correct: "+String.valueOf(sh.getInt("correct",0))+"\n"+"wrong: "+String.valueOf(sh.getInt("wrong",0)),Toast.LENGTH_LONG).show();
 
 
     }
 
     void summarydialog(){
-        correct = quantity-wrong;
+        //correct = quantity-wrong;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(ScanCodeActivity.this);
         ViewGroup viewGroup = findViewById(android.R.id.content);
         final View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.summarydialog, viewGroup, false);
         builder.setView(dialogView);
-        final AlertDialog alertDialog = builder.create();
-        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        alertDialog.setCancelable(false);
+        alertDialogSummary = builder.create();
+        alertDialogSummary.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialogSummary.setCancelable(false);
 
         summary_date =dialogView.findViewById(R.id.summary_date);
         summary_vehiclenumber = dialogView.findViewById(R.id.summary_vehiclenumber);
@@ -298,15 +318,13 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
         summary_correct = dialogView.findViewById(R.id.summary_correct);
         summary_wrong = dialogView.findViewById(R.id.summary_wrong);
 
-
         summary_date.setText(date);
         summary_vehiclenumber.setText(vehicle_number);
         summary_invoicenumber.setText(invoice_number);
         summary_partname.setText(selectedPartName);
         summary_partquantity.setText(String.valueOf(quantity));
-        summary_correct.setText(String.valueOf(correct));
-        summary_wrong.setText(String.valueOf(wrong));
-
+        summary_correct.setText(String.valueOf(sh.getInt("correct",0)));
+        summary_wrong.setText(String.valueOf(sh.getInt("wrong",0)));
 
 
 
@@ -322,8 +340,8 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                 scanner_data.put("invoice_number", invoice_number);
                 scanner_data.put("part_code", selectedPartName);
                 scanner_data.put("part_quantity", String.valueOf(quantity));
-                scanner_data.put("correct_barcode", String.valueOf(correct));
-                scanner_data.put("wrong_barcode", String.valueOf(wrong));
+                scanner_data.put("correct_barcode", String.valueOf(sh.getInt("correct",0)));
+                scanner_data.put("wrong_barcode", String.valueOf(sh.getInt("wrong",0)));
                 scanner_data.put("month",month_name);
                 scanner_data.put("plant","chakan");
                 scanner_data.put("part_name",part_name);
@@ -338,9 +356,9 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                             public void onSuccess(@NonNull DocumentReference documentReference) {
                                 Toast.makeText(ScanCodeActivity.this, "data added to database", Toast.LENGTH_LONG).show();
                                 SmsManager mySmsManager = SmsManager.getDefault();
-                                mySmsManager.sendTextMessage("+917447297382", null, "Part with wrongly applied barcode found in vehicle no. "+vehicle_number.toString()+"\n\n"+"Scanning Summary: "+"\n\n"+"Plant Name: "+"chakan"+"\n"+"Date: "+date+"\n"+"Vehicle Number: "+vehicle_number+"\n"+"Invoice Number: "+invoice_number+"\n"+"Selected Part: "+selectedPartName+"\n"+"Part Quantity: "+String.valueOf(quantity)+"\n"+"Correct Barcode: "+String.valueOf(correct)+"\n"+"Wrong Barcode: "+String.valueOf(wrong), null, null);
+                                mySmsManager.sendTextMessage("+919175077482", null, "Part with wrongly applied barcode found in vehicle no. "+vehicle_number.toString()+"\n\n"+"Scanning Summary: "+"\n\n"+"Plant Name: "+"chakan"+"\n"+"Date: "+date+"\n"+"Vehicle Number: "+vehicle_number+"\n"+"Invoice Number: "+invoice_number+"\n"+"Selected Part: "+selectedPartName+"\n"+"Part Quantity: "+String.valueOf(quantity)+"\n"+"Correct Barcode: "+String.valueOf(correct)+"\n"+"Wrong Barcode: "+String.valueOf(wrong), null, null);
                                 Toast.makeText(ScanCodeActivity.this, "SMS sent.", Toast.LENGTH_LONG).show();
-
+                                myEdit.clear().commit();
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -350,15 +368,17 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                             }
                         });
 
-                alertDialog.dismiss();
+                alertDialogSummary.dismiss();
                // onBackPressed();
                 Intent intent = new Intent(ScanCodeActivity.this, vehicleinformation.class);
                 startActivity(intent);
                 finish();
 
+
+
             }
         });
-        alertDialog.show();
+        alertDialogSummary.show();
 
 
 
@@ -404,5 +424,149 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
         }
         scannerView.setResultHandler(this);
         scannerView.startCamera();
+    }
+
+    void correct(){
+
+    }
+
+    void wrong(){
+
+    }
+
+    private class MyTaskWrong extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            myEdit.putInt("start_count",s1);
+            myEdit.apply();
+
+            //wrong++;
+            wrong = sh.getInt("wrong",0 );
+            wrong += 1;
+            //SharedPreferences.Editor myEdit = sh.edit();
+            myEdit.putInt("wrong",wrong);
+            myEdit.apply();
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+            //Log.e("result","Task "+String.valueOf(s1)+": "+"correct: "+String.valueOf(sh.getInt("correct",0 ))+"wrong: "+String.valueOf(sh.getInt("wrong",0 )));
+            Log.e("result","Task "+String.valueOf(s1)+": "+"\n\n\ncorrect: "+String.valueOf(sh.getInt("correct",0 ))+"wrong: "+String.valueOf(sh.getInt("wrong",0 ))+"\n\n\n");
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(getApplicationContext(), sh.getAll().toString(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            //Toast.makeText(ScanCodeActivity.this, "correct: "+String.valueOf(sh.getInt("correct",0))+"\n"+"wrong: "+String.valueOf(sh.getInt("wrong",0)),Toast.LENGTH_LONG).show();
+            alertDialogWrong.dismiss();
+            //onBackPressed();
+            finish();
+            startActivity(getIntent());
+
+        }
+    }
+
+    private class MyTaskWrongSummary extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            myEdit.putInt("start_count",s1);
+            myEdit.apply();
+
+            //wrong++;
+            wrong = sh.getInt("wrong",0 );
+            wrong += 1;
+            //SharedPreferences.Editor myEdit = sh.edit();
+            myEdit.putInt("wrong",wrong);
+            myEdit.apply();
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+            Log.e("result","Task "+String.valueOf(s1)+": "+"\n\n\ncorrect: "+String.valueOf(sh.getInt("correct",0 ))+"wrong: "+String.valueOf(sh.getInt("wrong",0 ))+"\n\n\n");
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(getApplicationContext(), sh.getAll().toString(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            //Toast.makeText(ScanCodeActivity.this, "correct: "+String.valueOf(sh.getInt("correct",0))+"\n"+"wrong: "+String.valueOf(sh.getInt("wrong",0)),Toast.LENGTH_LONG).show();
+            alertDialogWrongSummary.dismiss();
+            summarydialog();
+        }
+    }
+
+    private class MyTaskCorrect extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            myEdit.putInt("start_count",s1);
+            myEdit.apply();
+
+            //correct++;
+            correct = sh.getInt("correct",0 );
+            correct += 1;
+            //SharedPreferences.Editor myEdit = sh.edit();
+            myEdit.putInt("correct",correct);
+            myEdit.apply();
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+            //Log.e("result","Task "+String.valueOf(s1)+": "+"correct: "+String.valueOf(sh.getInt("correct",0 ))+"wrong: "+String.valueOf(sh.getInt("wrong",0 )));
+            Log.e("result","Task "+String.valueOf(s1)+": "+"\n\n\ncorrect: "+String.valueOf(sh.getInt("correct",0 ))+"wrong: "+String.valueOf(sh.getInt("wrong",0 ))+"\n\n\n");
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(getApplicationContext(), sh.getAll().toString(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            //Toast.makeText(ScanCodeActivity.this, "correct: "+String.valueOf(sh.getInt("correct",0))+"\n"+"wrong: "+String.valueOf(sh.getInt("wrong",0)),Toast.LENGTH_LONG).show();
+            alertDialogCorrect.dismiss();
+            //onBackPressed();
+            finish();
+            startActivity(getIntent());
+        }
+    }
+
+    private class MyTaskCorrectSummary extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            myEdit.putInt("start_count",s1);
+            myEdit.apply();
+
+            //correct++;
+            correct = sh.getInt("correct",0 );
+            correct += 1;
+            //SharedPreferences.Editor myEdit = sh.edit();
+            myEdit.putInt("correct",correct);
+            myEdit.apply();
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+            //Log.e("result","Task "+String.valueOf(s1)+": "+"correct: "+String.valueOf(sh.getInt("correct",0 ))+"wrong: "+String.valueOf(sh.getInt("wrong",0 )));
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(getApplicationContext(), sh.getAll().toString(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            Log.e("result","Task "+String.valueOf(s1)+": "+"\n\n\ncorrect: "+String.valueOf(sh.getInt("correct",0 ))+"wrong: "+String.valueOf(sh.getInt("wrong",0 ))+"\n\n\n");
+            //Toast.makeText(ScanCodeActivity.this, "correct: "+String.valueOf(sh.getInt("correct",0))+"\n"+"wrong: "+String.valueOf(sh.getInt("wrong",0)),Toast.LENGTH_LONG).show();
+            alertDialogCorrectSummary.dismiss();
+            summarydialog();
+        }
     }
 }

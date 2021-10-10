@@ -8,11 +8,9 @@ android:orientation="vertical"
     android:gravity="center">
 
 <Button
-
     android:drawableStart="@drawable/ic_edit"
     android:drawableLeft="@drawable/ic_edit"
     android:layout_marginLeft="25dp"
-    android:background="@drawable/buttonss"
     android:layout_marginRight="25dp"
     android:layout_marginBottom="25dp"
     android:id="@+id/Editprofileadmin"
@@ -20,6 +18,7 @@ android:orientation="vertical"
     android:layout_height="wrap_content"
     android:text="EDIT PROFILE"
     android:layout_gravity="center"
+    android:padding="15dp"
     android:textAlignment="center"
     android:backgroundTint="@color/colorPrimary"
     android:textColor="#ffffff"
@@ -28,12 +27,13 @@ android:orientation="vertical"
 </Button>
 
 <Button
-    android:background="@drawable/buttonss"
     android:drawableStart="@drawable/ic_logout"
     android:drawableLeft="@drawable/ic_logout"
     android:layout_margin="25dp"
     android:id="@+id/logoutadmin"
     android:layout_width="match_parent"
+    android:padding="15dp"
+
     android:layout_height="wrap_content"
     android:text="LOGOUT"
     android:layout_gravity="center"

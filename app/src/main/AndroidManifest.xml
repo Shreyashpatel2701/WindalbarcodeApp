@@ -23,33 +23,49 @@
             android:exported="true" />
         <activity
             android:name=".DynamicParts"
-            android:exported="true"></activity>
-        <activity android:name=".Admin.Addparts" />
-        <activity android:name=".Masteradminlogin" />
-        <activity android:name=".Admin.Addplants" />
-        <activity android:name=".Admin.ViewData" />
+            android:exported="true"/>
+        <activity android:name=".Admin.Addparts"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Masteradminlogin"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Admin.Addplants"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Admin.ViewData"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".sp2"
             android:exported="true" />
         <activity
             android:name=".sp1"
             android:exported="true" />
-        <activity android:name=".Admin.Adminbottomnavigation" />
-        <activity android:name=".Admin.AdminLoginScreen" />
-        <activity android:name=".RegistrationActivity" />
-        <activity android:name=".LoginoptionsActivity" />
-        <activity android:name=".compnentsinformation" />
-        <activity android:name=".vehicleinformation" />
-        <activity android:name=".ScanCodeActivity" />
-        <activity android:name=".Loginactivity" />
+        <activity android:name=".Admin.Adminbottomnavigation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Admin.AdminLoginScreen"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".RegistrationActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".LoginoptionsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".compnentsinformation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".vehicleinformation"
+            android:exported="true"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".ScanCodeActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Loginactivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
         <provider

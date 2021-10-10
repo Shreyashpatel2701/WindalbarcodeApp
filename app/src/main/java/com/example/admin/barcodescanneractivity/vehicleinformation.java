@@ -5,9 +5,12 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -18,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 
@@ -55,6 +59,9 @@ public class vehicleinformation extends AppCompatActivity {
     ProgressDialog dialog;
     String part_code,month_name;
     ProgressDialog progressDialog;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor myEdit;
+    AlertDialog progress;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,11 +75,22 @@ public class vehicleinformation extends AppCompatActivity {
 //                "Loading. Please wait...", true);
 //        dialog.show();
 
-        progressDialog = new ProgressDialog(vehicleinformation.this);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage("Loading");
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.show();
+//        progressDialog = new ProgressDialog(vehicleinformation.this);
+//        progressDialog.setCancelable(false);
+//        progressDialog.setMessage("Loading");
+//        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//        progressDialog.show();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(vehicleinformation.this);
+        ViewGroup viewGroup = findViewById(android.R.id.content);
+        final View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.progressdialog, viewGroup, false);
+        builder.setView(dialogView);
+        progress = builder.create();
+        progress.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        progress.show();
+
+        sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
+        myEdit = sharedPreferences.edit();
 
         Calendar cal=Calendar.getInstance();
         SimpleDateFormat month_date = new SimpleDateFormat("MMMM");
@@ -146,29 +164,29 @@ public class vehicleinformation extends AppCompatActivity {
                                     part_code = document.getData().get("code").toString();
                                 }
                                 selectedPartName = part_code;
-                                SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
-
-                                SharedPreferences.Editor myEdit = sharedPreferences.edit();
-
-                                myEdit.putInt("start_count",0 );
-                                myEdit.putInt("correct",0);
-                                myEdit.putInt("wrong",0);
-                                myEdit.apply();
-
-
+//                                SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
+//
+//                                SharedPreferences.Editor myEdit = sharedPreferences.edit();
+//
+//                                myEdit.putInt("start_count",0 );
+//                                myEdit.putInt("correct",0);
+//                                myEdit.putInt("wrong",0);
+//                                myEdit.commit();
+                                new AsyncSharedPref().execute();
+                                //Toast.makeText(vehicleinformation.this, sharedPreferences.toString(), Toast.LENGTH_SHORT).show();
                                 //Toast.makeText(vehicleinformation.this,parts_selected,Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(vehicleinformation.this, ScanCodeActivity.class);
-                                intent.putExtra("selectedPartName", selectedPartName);
-                                intent.putExtra("quantity", part_quantity.getText().toString());
-                                intent.putExtra("vehicle_number", vehicle_number.getText().toString());
-                                intent.putExtra("invoice_number", invoice_number.getText().toString());
-                                intent.putExtra("date", et_date.getText().toString());
-                                intent.putExtra("month", month_name);
-                                intent.putExtra("part_name", selected_parts);
-
-
-                                startActivity(intent);
-                                finish();
+//                                Intent intent = new Intent(vehicleinformation.this, ScanCodeActivity.class);
+//                                intent.putExtra("selectedPartName", selectedPartName);
+//                                intent.putExtra("quantity", part_quantity.getText().toString());
+//                                intent.putExtra("vehicle_number", vehicle_number.getText().toString());
+//                                intent.putExtra("invoice_number", invoice_number.getText().toString());
+//                                intent.putExtra("date", et_date.getText().toString());
+//                                intent.putExtra("month", month_name);
+//                                intent.putExtra("part_name", selected_parts);
+//
+//
+//                                startActivity(intent);
+//                                finish();
 
                             }
                         });
@@ -176,13 +194,42 @@ public class vehicleinformation extends AppCompatActivity {
 
             }
 
-
-
-
         }
     }
 
 
+    private class AsyncSharedPref extends AsyncTask<Void, Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+//            sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
+//            myEdit = sharedPreferences.edit();
+
+            myEdit.putInt("start_count",0 );
+            myEdit.putInt("correct",0);
+            myEdit.putInt("wrong",0);
+            myEdit.commit();
+            Log.e("shredPref: ",sharedPreferences.getAll().toString());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+            Intent intent = new Intent(vehicleinformation.this, ScanCodeActivity.class);
+            intent.putExtra("selectedPartName", selectedPartName);
+            intent.putExtra("quantity", part_quantity.getText().toString());
+            intent.putExtra("vehicle_number", vehicle_number.getText().toString());
+            intent.putExtra("invoice_number", invoice_number.getText().toString());
+            intent.putExtra("date", et_date.getText().toString());
+            intent.putExtra("month", month_name);
+            intent.putExtra("part_name", selected_parts);
+
+
+            startActivity(intent);
+            finish();
+        }
+    }
 
     void spinner_parts(){
 
@@ -207,7 +254,7 @@ public class vehicleinformation extends AppCompatActivity {
                         ArrayAdapter adapter_parts = new ArrayAdapter(vehicleinformation.this,android.R.layout.simple_spinner_item,stringArray);
                         adapter_parts.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         selectParts.setAdapter(adapter_parts);
-                        progressDialog.dismiss();
+                        progress.dismiss();
                     }
 
                 })

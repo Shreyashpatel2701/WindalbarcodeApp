@@ -21,21 +21,33 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 public class Loginactivity extends AppCompatActivity {
       EditText EMAIL,PASSWORD;
     Button Login;
     Spinner plant_selection;
     ProgressDialog progressDialog;
+    Spinner select_month, select_plant;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    ArrayList<String> array = new ArrayList<String>();
+    String[] stringArray={};
+
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
          setContentView(R.layout.login_activity);
          init();
-         spinner_plants();
+        plant_selection.setEnabled(false);
+        plant_spinner();
          Login.setOnClickListener(new btnloginonclicklistener());
+
     }
 
     void init(){
@@ -48,6 +60,9 @@ public class Loginactivity extends AppCompatActivity {
     public class btnloginonclicklistener implements View.OnClickListener{
         @Override
         public void onClick(View view) {
+
+
+
             if(EMAIL.getText().toString().isEmpty()){
                 EMAIL.setError("Invalid Email");
                 PASSWORD.setFocusable(true);
@@ -55,7 +70,6 @@ public class Loginactivity extends AppCompatActivity {
             else if (!Patterns.EMAIL_ADDRESS.matcher(EMAIL.getText().toString()).matches()) {
                 EMAIL.setError("Invalid Email");
                 PASSWORD.setFocusable(true);
-
             }
 //            if (!EMAIL.getText().toString().matches(Patterns.EMAIL_ADDRESS.toString())){
 //                EMAIL.setError("Invalid email");
@@ -99,16 +113,15 @@ public class Loginactivity extends AppCompatActivity {
             public void onSuccess(@NonNull AuthResult authResult) {
 
               if (authResult.getAdditionalUserInfo().isNewUser()){
-
                   Toast.makeText(Loginactivity.this,"Register first",Toast.LENGTH_LONG).show();
-
               }
 
                 FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
                  firebaseFirestore.collection("chakan").
                       document("users").
                       collection("all users")
-                      .whereEqualTo("email", email).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                      .whereEqualTo("email", email).get()
+                         .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                      @Override
                      public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
                          if (!queryDocumentSnapshots.getDocuments().isEmpty()) {
@@ -118,7 +131,7 @@ public class Loginactivity extends AppCompatActivity {
                              startActivity(intent);
                              Toast.makeText(Loginactivity.this, "Registered User", Toast.LENGTH_LONG).show();
                          }else {
-                             Log.e("hello","error");
+                             Toast.makeText(Loginactivity.this, "Not Registered User", Toast.LENGTH_LONG).show();
                          }
                      }
                  }).addOnFailureListener(new OnFailureListener() {
@@ -139,6 +152,51 @@ public class Loginactivity extends AppCompatActivity {
         });
 
 
+    }
+
+    void plant_spinner(){
+
+        array.add("--Select Plant--");
+
+        db.collection("plants")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
+                        for(DocumentSnapshot document: queryDocumentSnapshots.getDocuments()){
+                            //Log.e("type", String.valueOf(document.getData().get("name")));
+                            array.add(String.valueOf(document.getData().get("name")));
+                        }
+                        Log.e("type",array.toString());
+//                        parts = array.toArray(array);
+                        stringArray = array.toArray(new String[0]);
+                        Log.e("converted shit",stringArray.toString());
+//                        ArrayAdapter adapter_parts = new ArrayAdapter(ExportToExcel.this,android.R.layout.simple_spinner_item,stringArray);
+//                        adapter_parts.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                        select_plant.setAdapter(adapter_parts);
+                        ArrayAdapter adapter_plants = new ArrayAdapter(Loginactivity.this,android.R.layout.simple_spinner_item,stringArray);
+                        adapter_plants.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        plant_selection.setAdapter(adapter_plants);
+
+                        plant_selection.setEnabled(true);
+                        //progressDialog.dismiss();
+                    }
+
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        if(e!=null){
+                            Toast.makeText(Loginactivity.this, "Cant fetch plants", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+
+
+//        ArrayAdapter adapter_parts = new ArrayAdapter(ExportToExcel.this,android.R.layout.simple_spinner_item,plantArray);
+//        adapter_parts.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        select_plant.setAdapter(adapter_parts);
     }
 
 }
