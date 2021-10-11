@@ -137,6 +137,7 @@ public class Loginactivity extends AppCompatActivity {
                  }).addOnFailureListener(new OnFailureListener() {
                      @Override
                      public void onFailure(@NonNull Exception e) {
+                      progressDialog.dismiss();
                      Toast .makeText(Loginactivity.this,"error",Toast.LENGTH_LONG).show();
                      Log.e("failure","failure");
                      }
