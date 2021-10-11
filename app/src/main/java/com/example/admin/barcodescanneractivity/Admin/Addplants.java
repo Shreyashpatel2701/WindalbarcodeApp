@@ -20,12 +20,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.admin.barcodescanneractivity.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class Addplants extends AppCompatActivity {
     private ListView mListViewCities;
@@ -71,7 +74,15 @@ public class Addplants extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
+                if (addplantname.getText().toString().isEmpty()){
 
+                    Toast.makeText(Addplants.this,"Please Enter Plant name",Toast.LENGTH_LONG).show();
+                }else {
+                   addplants(addplantname.getText().toString());
+
+
+
+                }
                 }
             });
                alertDialog.show();
@@ -108,10 +119,27 @@ public class Addplants extends AppCompatActivity {
 
     }
 
-    private  void addplants(){
+    private  void addplants(String Plantname){
+        Map<String, Object> add_data = new HashMap<>();
+        add_data.put("name",Plantname);
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("plants").add(add_data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(@NonNull DocumentReference documentReference) {
+                 Toast.makeText(Addplants.this,"Part Added sucessfully",Toast.LENGTH_LONG).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(Addplants.this,"Error",Toast.LENGTH_LONG).show();
+            }
+        });
+
+
 
     }
     private void init() {
+
         mPlants = new ArrayList<>();
         mBtnAdd = findViewById(R.id.addplants);
         mListViewCities = findViewById(R.id.listViewCities);
