@@ -131,6 +131,7 @@ public class Loginactivity extends AppCompatActivity {
                              startActivity(intent);
                              Toast.makeText(Loginactivity.this, "Registered User", Toast.LENGTH_LONG).show();
                          }else {
+                             progressDialog.dismiss();
                              Toast.makeText(Loginactivity.this, "Not Registered User", Toast.LENGTH_LONG).show();
                          }
                      }
@@ -143,11 +144,6 @@ public class Loginactivity extends AppCompatActivity {
                      }
                  });
 
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
 
             }
         });

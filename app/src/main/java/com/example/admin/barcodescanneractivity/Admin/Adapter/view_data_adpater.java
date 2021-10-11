@@ -18,7 +18,7 @@ public class view_data_adpater extends RecyclerView.Adapter {
 
     ArrayList<view_data_datamodel> mArraylist;
 
-    view_data_adpater(ArrayList<view_data_datamodel> arrayList){
+    public view_data_adpater(ArrayList<view_data_datamodel> arrayList){
          mArraylist = arrayList;
     }
 
@@ -26,13 +26,21 @@ public class view_data_adpater extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.view_data, parent,false);
+                .inflate(R.layout.view_data_adapter, parent,false);
         return new viewdataviewholder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
               viewdataviewholder mviewdataviewholder = (viewdataviewholder) holder;
+              view_data_datamodel view_data_datamodel = mArraylist.get(position);
+              mviewdataviewholder.date.setText(view_data_datamodel.getDate());
+              mviewdataviewholder.part_name.setText(view_data_datamodel.getPart_name());
+              mviewdataviewholder.invoice_number.setText(view_data_datamodel.getInvoice_number());
+              mviewdataviewholder.vehicle_number.setText(view_data_datamodel.getVehicle_number());
+              mviewdataviewholder.correct_data.setText(view_data_datamodel.getCorrect_barcode());
+              mviewdataviewholder.wrong_data.setText(view_data_datamodel.getWrong_barcode());
+
     }
 
     public class viewdataviewholder extends RecyclerView.ViewHolder{

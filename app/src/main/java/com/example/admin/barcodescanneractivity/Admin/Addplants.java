@@ -1,5 +1,6 @@
 package com.example.admin.barcodescanneractivity.Admin;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,7 +31,7 @@ public class Addplants extends AppCompatActivity {
     private ListView mListViewCities;
     private ArrayList<String> mPlants;
      Button ADDPLANT;
-
+    ProgressDialog dialog;
       EditText addplantname;
 
 //    private ArrayList<String> mListCities;
@@ -44,7 +45,9 @@ public class Addplants extends AppCompatActivity {
         setContentView(R.layout.addplants);
 
         init();
-
+        dialog = ProgressDialog.show(Addplants.this, "",
+                "Loading. Please wait...", true);
+        dialog.show();
          fetchplants();
          mBtnAdd.setOnClickListener(new BtnAddClickListener());
     }
@@ -67,19 +70,11 @@ public class Addplants extends AppCompatActivity {
             ADDPLANT.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (mPlants.contains(addplantname.getText().toString().toUpperCase(Locale.ROOT))){
-                        Toast.makeText(Addplants.this,"THIS PART IS ALREADY ADDED ",Toast.LENGTH_LONG).show();
-                        alertDialog.dismiss();
-                    }else {
-                        Toast.makeText(Addplants.this,addplantname.getText().toString() + "part added successfully",Toast.LENGTH_LONG).show();
-                        mPlants.add(addplantname.getText().toString().toUpperCase(Locale.ROOT));
-                        alertDialog.dismiss();
-                    }
+
 
                 }
             });
-            alertDialog.setCanceledOnTouchOutside(false);
-            alertDialog.show();
+               alertDialog.show();
 
         }
 
@@ -95,12 +90,19 @@ public class Addplants extends AppCompatActivity {
                         for (DocumentSnapshot snapshot: queryDocumentSnapshots.getDocuments()){
                             mPlants.add(String.valueOf(snapshot.getData().get("name")));
                         }
+                        mAdapterCities = new ArrayAdapter<String>(
+                                Addplants.this,
+                                android.R.layout.simple_list_item_1,
+                                mPlants
+                        );
+                        mListViewCities.setAdapter(mAdapterCities);
+                        dialog.dismiss();
                     }
                 }
         ).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-
+                Toast.makeText(Addplants.this,"Error please return ",Toast.LENGTH_LONG).show();
             }
         });
 

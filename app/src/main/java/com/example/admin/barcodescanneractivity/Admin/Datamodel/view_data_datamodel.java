@@ -60,6 +60,22 @@ public class view_data_datamodel {
         this.wrong_barcode = wrong_barcode;
     }
 
+    public view_data_datamodel(String correct_barcode, String date, String invoice_number, String part_name, String part_quantity, String vehicle_number, String wrong_barcode) {
+        this.correct_barcode = correct_barcode;
+        this.date = date;
+        this.invoice_number = invoice_number;
+        this.part_name = part_name;
+        this.part_quantity = part_quantity;
+        this.vehicle_number = vehicle_number;
+        this.wrong_barcode = wrong_barcode;
+    }
+
+
+    public view_data_datamodel(){
+
+    }
+
+
     String date;
     String invoice_number;
     String part_name;
