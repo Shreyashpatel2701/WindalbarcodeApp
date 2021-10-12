@@ -26,8 +26,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 public class AdminLoginScreen extends AppCompatActivity {
     EditText EMAIL,PASSWORD;
@@ -36,12 +39,19 @@ public class AdminLoginScreen extends AppCompatActivity {
     ProgressDialog progressDialog;
     SharedPreferences sh;
     SharedPreferences.Editor myEdit;
+    ArrayList<String> array = new ArrayList<String>();
+    String[] stringArray={};
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.adminlogin);
         init();
-        spinner_plants();
+        //spinner_plants();
+        plant_spinner();
         Login.setOnClickListener(new btnloginonclicklisteneradmin());
         sh = getSharedPreferences("LoginSharedPref", MODE_PRIVATE);
         myEdit = sh.edit();
@@ -138,5 +148,51 @@ public class AdminLoginScreen extends AppCompatActivity {
 
 
     }
+
+    void plant_spinner(){
+
+        array.add("--Select Plant--");
+
+        db.collection("plants")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
+                        for(DocumentSnapshot document: queryDocumentSnapshots.getDocuments()){
+                            //Log.e("type", String.valueOf(document.getData().get("name")));
+                            array.add(String.valueOf(document.getData().get("name")));
+                        }
+                        Log.e("type",array.toString());
+//                        parts = array.toArray(array);
+                        stringArray = array.toArray(new String[0]);
+                        Log.e("converted shit",stringArray.toString());
+//                        ArrayAdapter adapter_parts = new ArrayAdapter(ExportToExcel.this,android.R.layout.simple_spinner_item,stringArray);
+//                        adapter_parts.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                        select_plant.setAdapter(adapter_parts);
+                        ArrayAdapter adapter_plants = new ArrayAdapter(AdminLoginScreen.this,android.R.layout.simple_spinner_item,stringArray);
+                        adapter_plants.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        plant_selection.setAdapter(adapter_plants);
+
+                        plant_selection.setEnabled(true);
+                        //progressDialog.dismiss();
+                    }
+
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        if(e!=null){
+                            Toast.makeText(AdminLoginScreen.this, "Cant fetch plants", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+
+
+//        ArrayAdapter adapter_parts = new ArrayAdapter(ExportToExcel.this,android.R.layout.simple_spinner_item,plantArray);
+//        adapter_parts.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        select_plant.setAdapter(adapter_parts);
+    }
+
 
 }
