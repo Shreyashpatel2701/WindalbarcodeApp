@@ -1,5 +1,7 @@
 package com.example.admin.barcodescanneractivity.Admin;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,6 +45,8 @@ public class Adminprofilescreen extends Fragment {
     StringBuilder data;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     View view;
+    SharedPreferences shLogin;
+    SharedPreferences.Editor myEditLogin;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,10 +65,16 @@ public class Adminprofilescreen extends Fragment {
         TextView editprofile = view.findViewById(R.id.Editprofileadmin);
         TextView exporttoexcel = view.findViewById(R.id.export_to_excel_admin);
         firebaseAuth = FirebaseAuth.getInstance();
+
+        shLogin = getActivity().getSharedPreferences("LoginSharedPref", MODE_PRIVATE);
+        myEditLogin = shLogin.edit();
+
         Logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 firebaseAuth.signOut();
+                myEditLogin.putString("userType", "none");
+                myEditLogin.commit();
                 startActivity(new Intent(getActivity(), LoginoptionsActivity.class));
                 getActivity().finish();
             }
@@ -90,7 +100,7 @@ public class Adminprofilescreen extends Fragment {
     public void abd(){
         Log.i("finallist",data.toString());
         try {
-            FileOutputStream out = getActivity().openFileOutput("windal_data.csv", Context.MODE_PRIVATE);
+            FileOutputStream out = getActivity().openFileOutput("windal_data.csv", MODE_PRIVATE);
             out.write((data.toString()).getBytes());
             out.close();
 

@@ -34,6 +34,8 @@ public class AdminLoginScreen extends AppCompatActivity {
     Button Login;
     Spinner plant_selection;
     ProgressDialog progressDialog;
+    SharedPreferences sh;
+    SharedPreferences.Editor myEdit;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +43,8 @@ public class AdminLoginScreen extends AppCompatActivity {
         init();
         spinner_plants();
         Login.setOnClickListener(new btnloginonclicklisteneradmin());
+        sh = getSharedPreferences("LoginSharedPref", MODE_PRIVATE);
+        myEdit = sh.edit();
     }
 
     void init(){
@@ -110,6 +114,8 @@ public class AdminLoginScreen extends AppCompatActivity {
                                 if (!queryDocumentSnapshots.getDocuments().isEmpty()) {
 
                                     progressDialog.dismiss();
+                                    myEdit.putString("userType", "admin");
+                                    myEdit.commit();
                                     Intent intent = new Intent(AdminLoginScreen.this, Adminbottomnavigation.class);
                                     startActivity(intent);
                                     Toast.makeText(AdminLoginScreen.this, "Registered User", Toast.LENGTH_LONG).show();

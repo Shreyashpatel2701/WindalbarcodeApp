@@ -2,6 +2,7 @@ package com.example.admin.barcodescanneractivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -36,6 +37,8 @@ public class Loginactivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     ArrayList<String> array = new ArrayList<String>();
     String[] stringArray={};
+    SharedPreferences sh;
+    SharedPreferences.Editor myEdit;
 
 
 
@@ -47,6 +50,10 @@ public class Loginactivity extends AppCompatActivity {
         plant_selection.setEnabled(false);
         plant_spinner();
          Login.setOnClickListener(new btnloginonclicklistener());
+        sh = getSharedPreferences("LoginSharedPref", MODE_PRIVATE);
+        myEdit = sh.edit();
+
+
 
     }
 
@@ -127,6 +134,8 @@ public class Loginactivity extends AppCompatActivity {
                          if (!queryDocumentSnapshots.getDocuments().isEmpty()) {
 
                                progressDialog.dismiss();
+                               myEdit.putString("userType", "user");
+                               myEdit.commit();
                              Intent intent = new Intent(Loginactivity.this, vehicleinformation.class);
                              startActivity(intent);
                              Toast.makeText(Loginactivity.this, "Registered User", Toast.LENGTH_LONG).show();

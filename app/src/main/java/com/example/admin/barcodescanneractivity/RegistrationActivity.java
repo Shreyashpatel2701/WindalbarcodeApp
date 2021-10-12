@@ -202,6 +202,7 @@ public class RegistrationActivity extends AppCompatActivity {
         register_data.put("email",Email );
         register_data.put("phno",Phone );
         register_data.put("name", Name );
+        register_data.put("usertype", DESIGNATION.getSelectedItem().toString());
 
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseFirestore.collection(plants).document("admin").collection("all admin")
@@ -232,6 +233,8 @@ public class RegistrationActivity extends AppCompatActivity {
         register_data.put("email",Email );
         register_data.put("phno",Phone );
         register_data.put("name", Name );
+        register_data.put("usertype", DESIGNATION.getSelectedItem().toString());
+
 
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseFirestore.collection(plants).document("users").collection("all users")
@@ -261,6 +264,7 @@ public class RegistrationActivity extends AppCompatActivity {
         register_data.put("email",Email );
         register_data.put("phno",Phone );
         register_data.put("name", Name );
+        register_data.put("usertype", DESIGNATION.getSelectedItem().toString());
 
 
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();

@@ -39,6 +39,13 @@ public class AdminHomeScreen extends Fragment {
         VIEWDATA.setOnClickListener(new btnviewdata());
         ADDPARTS.setOnClickListener(new btnaddplant());
         ADDPLANT.setOnClickListener(new btnaddparts());
+        USERDATA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ViewUser.class);
+                startActivity(intent);
+            }
+        });
 
         return view;
       }

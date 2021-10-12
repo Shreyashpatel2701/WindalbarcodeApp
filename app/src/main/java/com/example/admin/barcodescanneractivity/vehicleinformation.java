@@ -65,6 +65,8 @@ public class vehicleinformation extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor myEdit;
     AlertDialog progress;
+    SharedPreferences shLogin;
+    SharedPreferences.Editor myEditLogin;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,6 +76,8 @@ public class vehicleinformation extends AppCompatActivity {
 
 
         init();
+        shLogin = getSharedPreferences("LoginSharedPref", MODE_PRIVATE);
+        myEditLogin = shLogin.edit();
 //         dialog = ProgressDialog.show(vehicleinformation.this, "",
 //                "Loading. Please wait...", true);
 //        dialog.show();
@@ -214,6 +218,8 @@ public class vehicleinformation extends AppCompatActivity {
             case R.id.user_logout:
                 FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
                 firebaseAuth.signOut();
+                myEditLogin.putString("userType", "none");
+                myEditLogin.commit();
                 Intent intent = new Intent(vehicleinformation.this,LoginoptionsActivity.class);
                 startActivity(intent);
 
