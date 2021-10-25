@@ -158,6 +158,7 @@ public class vehicleinformation extends AppCompatActivity {
                 Toast.makeText(vehicleinformation.this,"Please select parts",Toast.LENGTH_SHORT).show();
                 return;
             }
+                //Todo: get plant name from SharedPrefs
                 db.collection("chakan")
                         .document("parts")
                         .collection("all parts")
@@ -266,6 +267,7 @@ public class vehicleinformation extends AppCompatActivity {
 
         array.add("--Select parts--");
 
+        //Todo: get plant name from SharedPrefs
         db.collection("chakan")
                 .document("parts")
                 .collection("all parts")

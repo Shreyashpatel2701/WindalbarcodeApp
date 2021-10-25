@@ -343,10 +343,11 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                 scanner_data.put("correct_barcode", String.valueOf(sh.getInt("correct",0)));
                 scanner_data.put("wrong_barcode", String.valueOf(sh.getInt("wrong",0)));
                 scanner_data.put("month",month_name);
+                //Todo: get plant name from SharedPrefs
                 scanner_data.put("plant","chakan");
                 scanner_data.put("part_name",part_name);
 
-
+                //Todo: get plant name from SharedPrefs
                 db.collection("chakan")
                         .document("data")
                         .collection("all data")
@@ -356,7 +357,12 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
                             public void onSuccess(@NonNull DocumentReference documentReference) {
                                 Toast.makeText(ScanCodeActivity.this, "data added to database", Toast.LENGTH_LONG).show();
                                 SmsManager mySmsManager = SmsManager.getDefault();
-                                mySmsManager.sendTextMessage("+919175077482", null, "Part with wrongly applied barcode found in vehicle no. "+vehicle_number.toString()+"\n\n"+"Scanning Summary: "+"\n\n"+"Plant Name: "+"chakan"+"\n"+"Date: "+date+"\n"+"Vehicle Number: "+vehicle_number+"\n"+"Invoice Number: "+invoice_number+"\n"+"Selected Part: "+selectedPartName+"\n"+"Part Quantity: "+String.valueOf(quantity)+"\n"+"Correct Barcode: "+String.valueOf(correct)+"\n"+"Wrong Barcode: "+String.valueOf(wrong), null, null);
+                                //Todo: get phno from firebase of this plants supervisors and use here
+                                //Todo: get plant name from SharedPrefs
+                                mySmsManager.sendTextMessage("+919168389278", null, "Part with wrongly applied barcode found in vehicle no. "+vehicle_number.toString()+"\n\n"+"Scanning Summary: "+"\n\n"+"Plant Name: "+"chakan"+"\n"+"Date: "+date+"\n"+"Vehicle Number: "+vehicle_number+"\n"+"Invoice Number: "+invoice_number+"\n"+"Selected Part: "+selectedPartName+"\n"+"Part Quantity: "+String.valueOf(quantity)+"\n"+"Correct Barcode: "+String.valueOf(correct)+"\n"+"Wrong Barcode: "+String.valueOf(wrong), null, null);
+                                mySmsManager.sendTextMessage("+919325831422", null, "Part with wrongly applied barcode found in vehicle no. "+vehicle_number.toString()+"\n\n"+"Scanning Summary: "+"\n\n"+"Plant Name: "+"chakan"+"\n"+"Date: "+date+"\n"+"Vehicle Number: "+vehicle_number+"\n"+"Invoice Number: "+invoice_number+"\n"+"Selected Part: "+selectedPartName+"\n"+"Part Quantity: "+String.valueOf(quantity)+"\n"+"Correct Barcode: "+String.valueOf(correct)+"\n"+"Wrong Barcode: "+String.valueOf(wrong), null, null);
+                                mySmsManager.sendTextMessage("+918956026663", null, "Part with wrongly applied barcode found in vehicle no. "+vehicle_number.toString()+"\n\n"+"Scanning Summary: "+"\n\n"+"Plant Name: "+"chakan"+"\n"+"Date: "+date+"\n"+"Vehicle Number: "+vehicle_number+"\n"+"Invoice Number: "+invoice_number+"\n"+"Selected Part: "+selectedPartName+"\n"+"Part Quantity: "+String.valueOf(quantity)+"\n"+"Correct Barcode: "+String.valueOf(correct)+"\n"+"Wrong Barcode: "+String.valueOf(wrong), null, null);
+
                                 Toast.makeText(ScanCodeActivity.this, "SMS sent.", Toast.LENGTH_LONG).show();
                                 myEdit.clear().commit();
                             }

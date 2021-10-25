@@ -155,7 +155,8 @@ public class RegistrationActivity extends AppCompatActivity {
          }
      });
 
-       firebaseAuth.createUserWithEmailAndPassword(Email,Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        //Todo: What if we Nilesh sir wants to add admin for another plant? we have not given plant name option But we cannot give that option to everyone
+        firebaseAuth.createUserWithEmailAndPassword(Email,Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
            @Override
            public void onComplete(@NonNull  Task<AuthResult> task) {
                // if Email is valid

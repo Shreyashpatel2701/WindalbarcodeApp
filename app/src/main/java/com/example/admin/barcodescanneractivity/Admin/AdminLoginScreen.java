@@ -102,7 +102,6 @@ public class AdminLoginScreen extends AppCompatActivity {
         ArrayAdapter adapter_plants = new ArrayAdapter(this,android.R.layout.simple_spinner_item,parts);
         adapter_plants.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         plant_selection.setAdapter(adapter_plants);
-
     }
 
     void Admin_Login_auth(String email,String password){
@@ -139,6 +138,13 @@ public class AdminLoginScreen extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
                         Toast .makeText(AdminLoginScreen.this,"error",Toast.LENGTH_LONG).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+                        Toast.makeText(AdminLoginScreen.this,"Login failed",Toast.LENGTH_LONG).show();
+
                     }
                 });
 

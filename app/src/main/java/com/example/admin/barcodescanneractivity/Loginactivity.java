@@ -148,11 +148,18 @@ public class Loginactivity extends AppCompatActivity {
                      @Override
                      public void onFailure(@NonNull Exception e) {
                       progressDialog.dismiss();
-                     Toast .makeText(Loginactivity.this,"error",Toast.LENGTH_LONG).show();
+                     Toast.makeText(Loginactivity.this,"error",Toast.LENGTH_LONG).show();
                      Log.e("failure","failure");
                      }
                  });
 
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(Loginactivity.this,"Login failed",Toast.LENGTH_LONG).show();
 
             }
         });

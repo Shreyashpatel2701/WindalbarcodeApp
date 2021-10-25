@@ -29,7 +29,6 @@ public class ViewData extends AppCompatActivity {
     ImageButton datebutton;
     TextView Date;
     RecyclerView VIEWUSER_RECYCLERVIEW;
-    ArrayList<view_data_datamodel> view_data_datamodelArrayList = new ArrayList<view_data_datamodel>();
 
 
 
@@ -85,14 +84,20 @@ public class ViewData extends AppCompatActivity {
 
     public void Fetch_data(String date){
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-         firebaseFirestore.collection("chakan")
+        //Todo: get plant name from SharedPrefs
+        firebaseFirestore.collection("chakan")
                 .document("data")
                 .collection("all data").whereEqualTo("date",date).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
              @Override
              public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
+                 ArrayList<view_data_datamodel> view_data_datamodelArrayList = new ArrayList<view_data_datamodel>();
+                 if(queryDocumentSnapshots.isEmpty()){
+                     view_data_adpater viewDataAdpater = new view_data_adpater(view_data_datamodelArrayList);
+                     VIEWUSER_RECYCLERVIEW.setAdapter(viewDataAdpater);
+                 }
                  for(DocumentSnapshot document: queryDocumentSnapshots.getDocuments()){
                      view_data_datamodel view_data_datamodel = document.toObject(com.example.admin.barcodescanneractivity.Admin.Datamodel.view_data_datamodel.class);
-                    view_data_datamodelArrayList.add(view_data_datamodel);
+                     view_data_datamodelArrayList.add(view_data_datamodel);
                      view_data_adpater viewDataAdpater = new view_data_adpater(view_data_datamodelArrayList);
                      VIEWUSER_RECYCLERVIEW.setAdapter(viewDataAdpater);
                  }
