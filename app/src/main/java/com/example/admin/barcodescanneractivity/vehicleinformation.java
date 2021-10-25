@@ -150,7 +150,7 @@ public class vehicleinformation extends AppCompatActivity {
             selected_parts = selectParts.getSelectedItem().toString();
 
 
-            if(et_date.getText().toString().equals("")||vehicle_number.getText().toString().equals("")||invoice_number.getText().toString().equals("")||part_quantity.getText().toString().equals("")){
+            if(et_date.getText().toString().equals("")||vehicle_number.getText().toString().equals("")||part_quantity.getText().toString().equals("")){
                 Toast.makeText(vehicleinformation.this, "Please enter all values", Toast.LENGTH_SHORT).show();
             }
             else {

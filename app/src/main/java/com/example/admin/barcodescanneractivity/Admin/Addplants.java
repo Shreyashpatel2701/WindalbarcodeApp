@@ -20,6 +20,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.admin.barcodescanneractivity.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,7 +38,7 @@ public class Addplants extends AppCompatActivity {
     private ArrayList<String> mPlants;
      Button ADDPLANT;
     ProgressDialog dialog;
-      EditText addplantname;
+      EditText addplantname,newadminname,newadminphone,newadminpassword,newadminemail;
 
 //    private ArrayList<String> mListCities;
 
@@ -67,26 +70,32 @@ public class Addplants extends AppCompatActivity {
             alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
              addplantname=dialogView.findViewById(R.id.addplant);
-            ADDPLANT=dialogView.findViewById(R.id.addplantbutton);
+             ADDPLANT=dialogView.findViewById(R.id.addplantbutton);
+             newadminemail=dialogView.findViewById(R.id.adminplantemail);
+             newadminname=dialogView.findViewById(R.id.adminplantname);
+             newadminpassword=dialogView.findViewById(R.id.adminplantpassword);
+             newadminphone=dialogView.findViewById(R.id.adminplantphone);
 
 
             ADDPLANT.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                if (addplantname.getText().toString().isEmpty()){
+                if (addplantname.getText().toString().isEmpty()||newadminemail.getText().toString().isEmpty()||newadminphone.getText().toString().isEmpty()||newadminname.getText().toString().isEmpty()||newadminpassword.getText().toString().isEmpty() ){
 
                     Toast.makeText(Addplants.this,"Please Enter Plant name",Toast.LENGTH_LONG).show();
                 }else {
-                   addplants(addplantname.getText().toString());
+                   addplants(addplantname.getText().toString().toLowerCase(Locale.ROOT));
+                   newadminsignin(newadminemail.getText().toString(),newadminpassword.getText().toString());
+                   admindeatils(newadminname.getText().toString(),newadminphone.getText().toString(),newadminemail.getText().toString(),addplantname.getText().toString().toUpperCase(Locale.ROOT));
 
 
 
                 }
                 }
+
             });
                alertDialog.show();
-
         }
 
 
@@ -131,13 +140,68 @@ public class Addplants extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(Addplants.this,"Error",Toast.LENGTH_LONG).show();
+                Toast.makeText(Addplants.this,"Error",Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
+
+
+    private void admindeatils(String name,String phone ,String email,String plantname){
+        Map<String, Object> register_data = new HashMap<>();
+        register_data.put("email",email );
+        register_data.put("phno", phone );
+        register_data.put("name", name );
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+       firebaseFirestore.collection(plantname).document("admin").collection("all admin").add(register_data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+           @Override
+           public void onSuccess(@NonNull DocumentReference documentReference) {
+
+              Toast.makeText(Addplants.this,"Admin data Added successfully ",Toast.LENGTH_LONG).show();
+
+
+           }
+       }).addOnFailureListener(new OnFailureListener() {
+           @Override
+           public void onFailure(@NonNull Exception e) {
+
+
+               Toast.makeText(Addplants.this,"ERROR WILL Admin data Add ",Toast.LENGTH_LONG).show();
+
+           }
+       });
 
 
     }
+
+    private void newadminsignin(String email,String password){
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+//        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+        firebaseAuth.createUserWithEmailAndPassword(email,password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(@NonNull AuthResult authResult) {
+
+            Toast.makeText(Addplants.this,"Admin Registered Successfully ",Toast.LENGTH_SHORT).show();
+
+            }
+
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(Addplants.this,"ERROR WILL Registration ",Toast.LENGTH_LONG).show();
+
+
+            }
+
+
+        });
+    }
+
+
+
+
+
     private void init() {
 
         mPlants = new ArrayList<>();

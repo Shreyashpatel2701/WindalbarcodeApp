@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +31,7 @@ public class ViewUser extends AppCompatActivity {
     LinearLayout loading;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     ArrayList<view_user_datamodel> view_user_datamodelArrayList = new ArrayList<view_user_datamodel>();
+    String plants;
 
 
     @Override
@@ -42,10 +45,11 @@ public class ViewUser extends AppCompatActivity {
         user_recyclerview = findViewById(R.id.user_recyclerview);
         user_recyclerview.setHasFixedSize(true);
         user_recyclerview.setLayoutManager(new LinearLayoutManager(getParent()));
-
+        @SuppressLint("WrongConstant") SharedPreferences sh = getSharedPreferences("PLANTADMIN",MODE_APPEND);
+        plants = sh.getString("plant","");
         //Todo: get plant name from SharedPrefs
         //Todo: With users we need to extract supervisors also
-        db.collection("chakan")
+        db.collection(plants)
                 .document("users")
                 .collection("all users")
                 .get()

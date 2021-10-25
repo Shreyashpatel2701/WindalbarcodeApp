@@ -1,6 +1,8 @@
 package com.example.admin.barcodescanneractivity.Admin;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
@@ -29,7 +31,7 @@ public class ViewData extends AppCompatActivity {
     ImageButton datebutton;
     TextView Date;
     RecyclerView VIEWUSER_RECYCLERVIEW;
-
+    String plants;
 
 
     @Override
@@ -50,6 +52,8 @@ public class ViewData extends AppCompatActivity {
         datebutton= findViewById(R.id.datepickerdialog);
         Date = findViewById(R.id.selected_date);
         VIEWUSER_RECYCLERVIEW =findViewById(R.id.viewdata_recyclerview);
+        @SuppressLint("WrongConstant") SharedPreferences sh = getSharedPreferences("PLANTADMIN",MODE_APPEND);
+        plants = sh.getString("plant","");
     }
 
     private class BtnDatePickerDialogClickListener implements View.OnClickListener {
@@ -85,7 +89,7 @@ public class ViewData extends AppCompatActivity {
     public void Fetch_data(String date){
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         //Todo: get plant name from SharedPrefs
-        firebaseFirestore.collection("chakan")
+        firebaseFirestore.collection(plants)
                 .document("data")
                 .collection("all data").whereEqualTo("date",date).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
              @Override
