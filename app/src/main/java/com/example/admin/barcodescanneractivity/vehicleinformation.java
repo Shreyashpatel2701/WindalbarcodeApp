@@ -58,7 +58,7 @@ public class vehicleinformation extends AppCompatActivity {
     ArrayList<String> array = new ArrayList<String>();
     //    String parts[]={};
     String[] stringArray={};
-    String selected_parts;
+    String selected_parts,plants;
     ProgressDialog dialog;
     String part_code,month_name;
     ProgressDialog progressDialog;
@@ -76,6 +76,8 @@ public class vehicleinformation extends AppCompatActivity {
 
 
         init();
+        @SuppressLint("WrongConstant") SharedPreferences sh = getSharedPreferences("PLANTADMIN",MODE_APPEND);
+        plants = sh.getString("plant","");
         shLogin = getSharedPreferences("LoginSharedPref", MODE_PRIVATE);
         myEditLogin = shLogin.edit();
 //         dialog = ProgressDialog.show(vehicleinformation.this, "",
@@ -159,7 +161,7 @@ public class vehicleinformation extends AppCompatActivity {
                 return;
             }
                 //Todo: get plant name from SharedPrefs
-                db.collection("chakan")
+                db.collection(plants)
                         .document("parts")
                         .collection("all parts")
                         .whereEqualTo("name",selected_parts)
@@ -268,7 +270,7 @@ public class vehicleinformation extends AppCompatActivity {
         array.add("--Select parts--");
 
         //Todo: get plant name from SharedPrefs
-        db.collection("chakan")
+        db.collection(plants)
                 .document("parts")
                 .collection("all parts")
                 .get()

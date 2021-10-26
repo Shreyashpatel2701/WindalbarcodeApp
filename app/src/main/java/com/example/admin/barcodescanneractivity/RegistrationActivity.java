@@ -75,6 +75,7 @@ public class RegistrationActivity extends AppCompatActivity {
          progressDialog = new ProgressDialog(RegistrationActivity.this);
          progressDialog.setMessage("Register");
          firebaseAuth = FirebaseAuth.getInstance();
+
        @SuppressLint("WrongConstant") SharedPreferences sh = getSharedPreferences("PLANTADMIN",MODE_APPEND);
        plants = sh.getString("plant","");
     }
@@ -269,7 +270,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection(plants).document("supervisor").collection("all supervisor")
+        firebaseFirestore.collection(plants).document("supervisor").collection("all supervisors")
                 .add(register_data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(@NonNull DocumentReference documentReference) {

@@ -80,7 +80,7 @@ public class ViewUser extends AppCompatActivity {
     }
 
     private void fetchSupervisor() {
-        db.collection("chakan")
+        db.collection(plants)
                 .document("supervisor")
                 .collection("all supervisors")
                 .get()
@@ -93,7 +93,6 @@ public class ViewUser extends AppCompatActivity {
                             view_user_datamodelArrayList.add(child);
                             view_user_adapter adapter = new view_user_adapter(view_user_datamodelArrayList);
                             user_recyclerview.setAdapter(adapter);
-
                         }
 
                     }
