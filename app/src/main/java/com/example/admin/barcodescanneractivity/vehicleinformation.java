@@ -52,6 +52,8 @@ public class vehicleinformation extends AppCompatActivity {
     EditText invoice_number;
     EditText part_quantity;
     ImageButton datepickerdialog;
+    ArrayList<String> supervisor_phno;
+
     Spinner selectParts;
     Button codename;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -111,6 +113,24 @@ public class vehicleinformation extends AppCompatActivity {
         datepickerdialog.setOnClickListener(new BtnDatePickerDialogClickListener());
         Continue.setOnClickListener(new btncontinue());
 
+                db.collection(plants)
+                .document("supervisor")
+                .collection("all supervisors")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
+                        for(DocumentSnapshot document : queryDocumentSnapshots.getDocuments()){
+                            supervisor_phno.add(document.getData().get("phno").toString());
+                        }
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(vehicleinformation.this,"Can't get supervisor number for sending message", Toast.LENGTH_LONG).show();
+            }
+        });
 
 
         //dialog.dismiss();
@@ -257,6 +277,7 @@ public class vehicleinformation extends AppCompatActivity {
             intent.putExtra("date", et_date.getText().toString());
             intent.putExtra("month", month_name);
             intent.putExtra("part_name", selected_parts);
+            intent.putExtra("supervisor_phno", supervisor_phno);
 
 
             startActivity(intent);
