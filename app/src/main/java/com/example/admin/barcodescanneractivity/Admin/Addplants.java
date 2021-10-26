@@ -85,9 +85,9 @@ public class Addplants extends AppCompatActivity {
 
                     Toast.makeText(Addplants.this,"Please Enter Plant name",Toast.LENGTH_LONG).show();
                 }else {
-                   addplants(addplantname.getText().toString().toLowerCase(Locale.ROOT));
-                   newadminsignin(newadminemail.getText().toString(),newadminpassword.getText().toString());
-                   admindeatils(newadminname.getText().toString(),newadminphone.getText().toString(),newadminemail.getText().toString(),addplantname.getText().toString().toUpperCase(Locale.ROOT));
+                   addplants(addplantname.getText().toString().toLowerCase(Locale.ROOT).trim());
+                   newadminsignin(newadminemail.getText().toString(),newadminpassword.getText().toString().trim());
+                   admindeatils(newadminname.getText().toString(),newadminphone.getText().toString(),newadminemail.getText().toString(),addplantname.getText().toString().toUpperCase(Locale.ROOT).trim());
 
 
 

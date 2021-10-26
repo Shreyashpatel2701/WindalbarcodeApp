@@ -95,7 +95,7 @@ public class Addparts extends AppCompatActivity {
                             if (name.isEmpty()||barcode.isEmpty()) {
                              Toast.makeText(Addparts.this,"ENTER DETAILS FIRST ",Toast.LENGTH_SHORT).show();
                             }else {
-                                addparts(barcode, name);
+                                addparts(barcode.trim().toUpperCase(Locale.ROOT), name.trim().toUpperCase(Locale.ROOT));
                             }
                         }
                     });
@@ -125,6 +125,7 @@ public class Addparts extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
+                       deletepart(DELETEPARTNAME.getText().toString().toUpperCase(Locale.ROOT).trim());
 
                 }
             });
@@ -197,7 +198,26 @@ public class Addparts extends AppCompatActivity {
 
     }
 
-    private void deletepart(){
+    private void deletepart(String partname){
+         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+         firebaseFirestore.collection(plants).document("parts")
+                .collection("all parts").whereEqualTo("name",partname.toUpperCase(Locale.ROOT)).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+             @Override
+             public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
+                 for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()){
+
+                     Toast.makeText(Addparts.this,snapshot.getId().toString(),Toast.LENGTH_SHORT).show();
+                     firebaseFirestore.collection(plants).document("parts")
+                             .collection("all parts").document(snapshot.getId().toString()).delete();
+                 }
+             }
+         }).addOnFailureListener(new OnFailureListener() {
+             @Override
+             public void onFailure(@NonNull Exception e) {
+                     Toast.makeText(Addparts.this,"ERROR OCCURED",Toast.LENGTH_LONG).show();
+             }
+         });
+
 
     }
 
