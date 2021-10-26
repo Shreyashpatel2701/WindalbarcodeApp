@@ -87,7 +87,7 @@
         android:layout_marginRight="25dp"
         android:textAlignment="center"
         android:layout_marginTop="20dp"
-        android:text="Invoice Number"
+        android:text="Invoice Number (optional)"
         android:textColor="@color/colorBlack" />
 
     <EditText
