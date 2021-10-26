@@ -52,7 +52,7 @@ public class vehicleinformation extends AppCompatActivity {
     EditText invoice_number;
     EditText part_quantity;
     ImageButton datepickerdialog;
-    ArrayList<String> supervisor_phno;
+    ArrayList<String> supervisor_phno = new ArrayList<String>();
 
     Spinner selectParts;
     Button codename;
