@@ -1,6 +1,8 @@
 package com.example.admin.barcodescanneractivity.Admin;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.admin.barcodescanneractivity.DynamicParts;
+import com.google.android.gms.dynamic.IFragmentWrapper;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -42,6 +45,7 @@ public class Addparts extends AppCompatActivity {
     String[] stringArray={};
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     ProgressDialog dialog;
+    String plants;
 
 //    private ArrayList<String> mListCities;
 
@@ -79,17 +83,20 @@ public class Addparts extends AppCompatActivity {
                     addpartsbarcode_alertdialog=dialogView.findViewById(R.id.add_part_barcode);
                     ADDPART=dialogView.findViewById(R.id.btbaddpartsalertdialog);
 
-                    String name = addpartsname_alertdialog.getText().toString();
-                    String barcode = addpartsbarcode_alertdialog.getText().toString();
+
 
 
 
                     ADDPART.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
-                            addparts(barcode,name);
-
+                            String name = addpartsname_alertdialog.getText().toString();
+                            String barcode = addpartsbarcode_alertdialog.getText().toString();
+                            if (name.isEmpty()||barcode.isEmpty()) {
+                             Toast.makeText(Addparts.this,"ENTER DETAILS FIRST ",Toast.LENGTH_SHORT).show();
+                            }else {
+                                addparts(barcode, name);
+                            }
                         }
                     });
                     alertDialog.setCanceledOnTouchOutside(true);
@@ -128,7 +135,10 @@ public class Addparts extends AppCompatActivity {
 
 
     private void fetchparts(){
-        firebaseFirestore.collection("chakan")
+
+        @SuppressLint("WrongConstant") SharedPreferences sh = getSharedPreferences("PLANTADMIN",MODE_APPEND);
+        plants = sh.getString("plant","");
+        firebaseFirestore.collection(plants)
                 .document("parts")
                 .collection("all parts")
                 .get()
@@ -166,7 +176,9 @@ public class Addparts extends AppCompatActivity {
         Map<String, Object> add_data = new HashMap<>();
         add_data.put("code",barcode);
         add_data.put("name",name);
-        firebaseFirestore.collection("chakan")
+        @SuppressLint("WrongConstant") SharedPreferences sh = getSharedPreferences("PLANTADMIN",MODE_APPEND);
+        plants = sh.getString("plant","");
+        firebaseFirestore.collection(plants)
                 .document("parts")
                 .collection("all parts").add(add_data).
                 addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

@@ -27,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class Loginactivity extends AppCompatActivity {
       EditText EMAIL,PASSWORD;
@@ -124,7 +125,7 @@ public class Loginactivity extends AppCompatActivity {
               }
 
                 FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-                 firebaseFirestore.collection("chakan").
+                 firebaseFirestore.collection(plant_selection.getSelectedItem().toString().toLowerCase(Locale.ROOT)).
                       document("users").
                       collection("all users")
                       .whereEqualTo("email", email).get()
@@ -136,6 +137,10 @@ public class Loginactivity extends AppCompatActivity {
                                progressDialog.dismiss();
                                myEdit.putString("userType", "user");
                                myEdit.commit();
+                             SharedPreferences sharedPreferences = getSharedPreferences("PLANTADMIN",MODE_PRIVATE);
+                             SharedPreferences.Editor ADMINDATA = sharedPreferences.edit();
+                             ADMINDATA.putString("plant",plant_selection.getSelectedItem().toString());
+                             ADMINDATA.commit();
                              Intent intent = new Intent(Loginactivity.this, vehicleinformation.class);
                              startActivity(intent);
                              Toast.makeText(Loginactivity.this, "Registered User", Toast.LENGTH_LONG).show();
