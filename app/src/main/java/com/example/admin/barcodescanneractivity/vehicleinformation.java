@@ -27,7 +27,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 
-import com.example.admin.barcodescanneractivity.Admin.ViewData;
+//import com.example.admin.barcodescanneractivity.Admin.ViewData;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -111,6 +111,7 @@ public class vehicleinformation extends AppCompatActivity {
 
         spinner_parts();
         datepickerdialog.setOnClickListener(new BtnDatePickerDialogClickListener());
+        
         Continue.setOnClickListener(new btncontinue());
 
                 db.collection(plants)
