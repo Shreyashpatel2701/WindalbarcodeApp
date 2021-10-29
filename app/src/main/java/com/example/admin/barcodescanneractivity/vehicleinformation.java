@@ -219,30 +219,39 @@ public class vehicleinformation extends AppCompatActivity {
     }
 
     void Add_truck(String truckname){
-        Map<String, Object> add_data = new HashMap<>();
-        add_data.put("number",truckname);
 
-        db.collection(plants)
-                .document("truck")
-                .collection("all truck").add(add_data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(@NonNull DocumentReference documentReference) {
-                Toast.makeText(vehicleinformation.this, "NEW TRUCK Number Added", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(vehicleinformation.this, "ERROR Will Number Added", Toast.LENGTH_SHORT).show();
-            }
-        });
+       if (truckname.isEmpty()){
 
+       }else {
 
+           Map<String, Object> add_data = new HashMap<>();
+           add_data.put("number", truckname);
+
+           db.collection(plants)
+                   .document("truck")
+                   .collection("all truck").add(add_data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+               @Override
+               public void onSuccess(@NonNull DocumentReference documentReference) {
+                   Toast.makeText(vehicleinformation.this, "NEW TRUCK Number Added", Toast.LENGTH_SHORT).show();
+               }
+           }).addOnFailureListener(new OnFailureListener() {
+               @Override
+               public void onFailure(@NonNull Exception e) {
+                   Toast.makeText(vehicleinformation.this, "ERROR Will Number Added", Toast.LENGTH_SHORT).show();
+               }
+           });
+
+       }
     }
 
 
     private class btncontinue implements View.OnClickListener{
         @Override
         public void onClick(View view) {
+
+
+            newtruckno.getText().toString();
+
             //parts_selected = parts_info.getSelectedItem().toString();
             selected_parts = selectParts.getSelectedItem().toString();
 
