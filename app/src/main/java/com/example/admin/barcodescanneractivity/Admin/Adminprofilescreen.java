@@ -63,6 +63,8 @@ public class Adminprofilescreen extends Fragment {
         FirebaseUser currentuser;
         TextView Logout = view.findViewById(R.id.logoutadmin);
         TextView editprofile = view.findViewById(R.id.Editprofileadmin);
+        editprofile.setVisibility(View.INVISIBLE);
+
         TextView exporttoexcel = view.findViewById(R.id.export_to_excel_admin);
         firebaseAuth = FirebaseAuth.getInstance();
 

@@ -33,6 +33,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -41,6 +42,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class vehicleinformation extends AppCompatActivity {
     public String selectedPartName;
@@ -48,11 +52,12 @@ public class vehicleinformation extends AppCompatActivity {
     Spinner parts_info;
     String parts_selected;
     EditText et_date;
-    EditText vehicle_number;
+    Spinner vehicle_number;
     EditText invoice_number;
-    EditText part_quantity;
-    ImageButton datepickerdialog;
+    EditText part_quantity,newtruckno;
+    ImageButton datepickerdialog,add_new_truck_button;
     ArrayList<String> supervisor_phno = new ArrayList<String>();
+    ArrayList<String> Trucklist = new ArrayList<String>();
 
     Spinner selectParts;
     Button codename;
@@ -60,6 +65,7 @@ public class vehicleinformation extends AppCompatActivity {
     ArrayList<String> array = new ArrayList<String>();
     //    String parts[]={};
     String[] stringArray={};
+    String[] stringArraytruck={};
     String selected_parts,plants;
     ProgressDialog dialog;
     String part_code,month_name;
@@ -107,8 +113,8 @@ public class vehicleinformation extends AppCompatActivity {
         SimpleDateFormat month_date = new SimpleDateFormat("MMMM");
         month_name = month_date.format(cal.getTime());
         //Toast.makeText(vehicleinformation.this, month_name.toString(), Toast.LENGTH_SHORT).show();
-
-
+        add_new_truck_button.setOnClickListener(new addnewtruckclicksetonclicklistener());
+        Fetch_truck();
         spinner_parts();
         datepickerdialog.setOnClickListener(new BtnDatePickerDialogClickListener());
         
@@ -161,9 +167,77 @@ public class vehicleinformation extends AppCompatActivity {
        part_quantity = findViewById(R.id.et_part_quantity);
        datepickerdialog = findViewById(R.id.btn_datepickerdialog);
        selectParts = findViewById(R.id.parts_spinner);
+       add_new_truck_button = findViewById(R.id.add_truck_button);
+       newtruckno = findViewById(R.id.add_new_truck);
+       newtruckno.setVisibility(View.INVISIBLE);
+    }
+
+
+    private class addnewtruckclicksetonclicklistener implements View.OnClickListener{
+        @Override
+        public void onClick(View view) {
+            newtruckno.setVisibility(View.VISIBLE);
+        }
+    }
+
+    void Fetch_truck(){
+        Trucklist.add("--Select Vehicleno--");
+
+        //Todo: get plant name from SharedPrefs
+        db.collection(plants)
+                .document("truck")
+                .collection("all truck")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
+                        for(DocumentSnapshot document: queryDocumentSnapshots.getDocuments()){
+                            Log.e("type", String.valueOf(document.getData().get("number")));
+                            Trucklist.add(String.valueOf(document.getData().get("number")));
+                        }
+                        Log.e("type",Trucklist.toString());
+//                        parts = array.toArray(array);
+                        stringArraytruck = Trucklist.toArray(new String[0]);
+                        Log.e("converted shit",stringArraytruck.toString());
+                        ArrayAdapter adapter_parts = new ArrayAdapter(vehicleinformation.this,android.R.layout.simple_spinner_item,stringArraytruck);
+                        adapter_parts.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        vehicle_number.setAdapter(adapter_parts);
+                        progress.dismiss();
+                    }
+
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        if(e!=null){
+                            Toast.makeText(vehicleinformation.this, "Cant fetch parts", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
 
     }
 
+    void Add_truck(String truckname){
+        Map<String, Object> add_data = new HashMap<>();
+        add_data.put("number",truckname);
+
+        db.collection(plants)
+                .document("truck")
+                .collection("all truck").add(add_data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(@NonNull DocumentReference documentReference) {
+                Toast.makeText(vehicleinformation.this, "NEW TRUCK Number Added", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(vehicleinformation.this, "ERROR Will Number Added", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+    }
 
 
     private class btncontinue implements View.OnClickListener{
@@ -173,7 +247,7 @@ public class vehicleinformation extends AppCompatActivity {
             selected_parts = selectParts.getSelectedItem().toString();
 
 
-            if(et_date.getText().toString().equals("")||vehicle_number.getText().toString().equals("")||part_quantity.getText().toString().equals("")){
+            if(et_date.getText().toString().equals("")||vehicle_number.getSelectedItem().toString().matches("--Select Vehicleno--")||part_quantity.getText().toString().equals("")){
                 Toast.makeText(vehicleinformation.this, "Please enter all values", Toast.LENGTH_SHORT).show();
             }
             else {
@@ -181,6 +255,8 @@ public class vehicleinformation extends AppCompatActivity {
                 Toast.makeText(vehicleinformation.this,"Please select parts",Toast.LENGTH_SHORT).show();
                 return;
             }
+
+                Add_truck(newtruckno.getText().toString());
                 //Todo: get plant name from SharedPrefs
                 db.collection(plants)
                         .document("parts")
@@ -273,7 +349,7 @@ public class vehicleinformation extends AppCompatActivity {
             Intent intent = new Intent(vehicleinformation.this, ScanCodeActivity.class);
             intent.putExtra("selectedPartName", selectedPartName);
             intent.putExtra("quantity", part_quantity.getText().toString());
-            intent.putExtra("vehicle_number", vehicle_number.getText().toString());
+            intent.putExtra("vehicle_number", vehicle_number.getSelectedItem().toString());
             intent.putExtra("invoice_number", invoice_number.getText().toString());
             intent.putExtra("date", et_date.getText().toString());
             intent.putExtra("month", month_name);

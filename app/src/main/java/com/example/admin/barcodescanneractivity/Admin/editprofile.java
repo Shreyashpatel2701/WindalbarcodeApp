@@ -1,6 +1,7 @@
 package com.example.admin.barcodescanneractivity.Admin;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -99,9 +100,6 @@ public class editprofile extends AppCompatActivity {
                   }
                 }
             });
-
-
-
                alertDialog.show();
         }
     }
@@ -110,17 +108,20 @@ public class editprofile extends AppCompatActivity {
 
     void deleteuser(String email){
 
-
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseFirestore.collection(plants).document("users")
                 .collection("all users").whereEqualTo("email",email).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
                 for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()){
-
+                    Toast.makeText(editprofile.this,"User with" + email + "deleted",Toast.LENGTH_LONG).show();
 
                     firebaseFirestore.collection(plants).document("users")
                             .collection("all users").document(snapshot.getId().toString()).delete();
+
+                    Intent intent = new Intent(editprofile.this,ViewUser.class);
+                    startActivity(intent);
+                    finish();
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -133,14 +134,18 @@ public class editprofile extends AppCompatActivity {
     }
 
     void deletesupervisor(String email){
+
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseFirestore.collection(plants).document("supervisor").collection("all supervisors").whereEqualTo("email",email).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(@NonNull QuerySnapshot queryDocumentSnapshots) {
                 for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()){
-
+                    Toast.makeText(editprofile.this,"Supervisor with" + email + "deleted",Toast.LENGTH_LONG).show();
 
                     firebaseFirestore.collection(plants).document("supervisor").collection("all supervisors").document(snapshot.getId().toString()).delete();
+                    Intent intent = new Intent(editprofile.this,ViewUser.class);
+                    startActivity(intent);
+                     finish();
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -149,11 +154,6 @@ public class editprofile extends AppCompatActivity {
                 Toast.makeText(editprofile.this,"ERROR OCCURED",Toast.LENGTH_LONG).show();
             }
         });
-
-
-
-
-
 
     }
 
