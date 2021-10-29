@@ -18,6 +18,7 @@
         android:roundIcon="@raw/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Admin.editprofile"></activity>
         <activity
             android:name=".Admin.ViewUser"
             android:exported="true" />

@@ -35,6 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -266,7 +267,7 @@ public class RegistrationActivity extends AppCompatActivity {
         register_data.put("email",Email );
         register_data.put("phno",Phone );
         register_data.put("name", Name );
-        register_data.put("usertype", DESIGNATION.getSelectedItem().toString());
+        register_data.put("usertype", DESIGNATION.getSelectedItem().toString().toLowerCase(Locale.ROOT));
 
 
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();

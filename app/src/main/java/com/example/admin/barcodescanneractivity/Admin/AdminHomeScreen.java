@@ -46,6 +46,13 @@ public class AdminHomeScreen extends Fragment {
                 startActivity(intent);
             }
         });
+        EDITUSERDATA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(),editprofile.class);
+                startActivity(intent);
+            }
+        });
 
         return view;
       }
