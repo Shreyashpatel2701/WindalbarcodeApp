@@ -75,6 +75,7 @@ public class vehicleinformation extends AppCompatActivity {
     AlertDialog progress;
     SharedPreferences shLogin;
     SharedPreferences.Editor myEditLogin;
+    String finalVehicleNumber;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -256,7 +257,10 @@ public class vehicleinformation extends AppCompatActivity {
             selected_parts = selectParts.getSelectedItem().toString();
 
 
-            if(et_date.getText().toString().equals("")||vehicle_number.getSelectedItem().toString().matches("--Select Vehicleno--")||part_quantity.getText().toString().equals("")){
+//            if(et_date.getText().toString().equals("")||vehicle_number.getSelectedItem().toString().matches("--Select Vehicleno--")||part_quantity.getText().toString().equals("")){
+//                Toast.makeText(vehicleinformation.this, "Please enter all values", Toast.LENGTH_SHORT).show();
+//            }
+            if(et_date.getText().toString().equals("")||(vehicle_number.getSelectedItem().toString().matches("--Select Vehicleno--")&&newtruckno.getText().toString().isEmpty())||part_quantity.getText().toString().equals("")){
                 Toast.makeText(vehicleinformation.this, "Please enter all values", Toast.LENGTH_SHORT).show();
             }
             else {
@@ -264,6 +268,19 @@ public class vehicleinformation extends AppCompatActivity {
                 Toast.makeText(vehicleinformation.this,"Please select parts",Toast.LENGTH_SHORT).show();
                 return;
             }
+                if(vehicle_number.getSelectedItem().toString().matches("--Select Vehicleno--")&& !newtruckno.getText().toString().isEmpty()){
+                    finalVehicleNumber = newtruckno.getText().toString();
+                }
+                if(!vehicle_number.getSelectedItem().toString().matches("--Select Vehicleno--")&& newtruckno.getText().toString().isEmpty()){
+                    finalVehicleNumber = vehicle_number.getSelectedItem().toString();
+                }
+                if(!vehicle_number.getSelectedItem().toString().matches("--Select Vehicleno--")&& !newtruckno.getText().toString().isEmpty()){
+                    finalVehicleNumber = vehicle_number.getSelectedItem().toString();
+                }
+
+
+                //Toast.makeText(vehicleinformation.this, finalVehicleNumber.toString(), Toast.LENGTH_SHORT).show();
+
 
                 Add_truck(newtruckno.getText().toString());
                 //Todo: get plant name from SharedPrefs
@@ -280,29 +297,9 @@ public class vehicleinformation extends AppCompatActivity {
                                     part_code = document.getData().get("code").toString();
                                 }
                                 selectedPartName = part_code;
-//                                SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref",MODE_PRIVATE);
-//
-//                                SharedPreferences.Editor myEdit = sharedPreferences.edit();
-//
-//                                myEdit.putInt("start_count",0 );
-//                                myEdit.putInt("correct",0);
-//                                myEdit.putInt("wrong",0);
-//                                myEdit.commit();
+
                                 new AsyncSharedPref().execute();
-                                //Toast.makeText(vehicleinformation.this, sharedPreferences.toString(), Toast.LENGTH_SHORT).show();
-                                //Toast.makeText(vehicleinformation.this,parts_selected,Toast.LENGTH_LONG).show();
-//                                Intent intent = new Intent(vehicleinformation.this, ScanCodeActivity.class);
-//                                intent.putExtra("selectedPartName", selectedPartName);
-//                                intent.putExtra("quantity", part_quantity.getText().toString());
-//                                intent.putExtra("vehicle_number", vehicle_number.getText().toString());
-//                                intent.putExtra("invoice_number", invoice_number.getText().toString());
-//                                intent.putExtra("date", et_date.getText().toString());
-//                                intent.putExtra("month", month_name);
-//                                intent.putExtra("part_name", selected_parts);
-//
-//
-//                                startActivity(intent);
-//                                finish();
+
 
                             }
                         });
@@ -358,7 +355,8 @@ public class vehicleinformation extends AppCompatActivity {
             Intent intent = new Intent(vehicleinformation.this, ScanCodeActivity.class);
             intent.putExtra("selectedPartName", selectedPartName);
             intent.putExtra("quantity", part_quantity.getText().toString());
-            intent.putExtra("vehicle_number", vehicle_number.getSelectedItem().toString());
+            //intent.putExtra("vehicle_number", vehicle_number.getSelectedItem().toString());
+            intent.putExtra("vehicle_number", finalVehicleNumber);
             intent.putExtra("invoice_number", invoice_number.getText().toString());
             intent.putExtra("date", et_date.getText().toString());
             intent.putExtra("month", month_name);
