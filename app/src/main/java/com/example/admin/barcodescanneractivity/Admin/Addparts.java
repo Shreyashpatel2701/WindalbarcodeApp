@@ -96,11 +96,13 @@ public class Addparts extends AppCompatActivity {
                              Toast.makeText(Addparts.this,"ENTER DETAILS FIRST ",Toast.LENGTH_SHORT).show();
                             }else {
                                 addparts(barcode.trim().toUpperCase(Locale.ROOT), name.trim().toUpperCase(Locale.ROOT));
+                                alertDialog.dismiss();
                             }
                         }
                     });
                     alertDialog.setCanceledOnTouchOutside(true);
                     alertDialog.show();
+                    //alertDialog.dismiss();
 
                 }
 

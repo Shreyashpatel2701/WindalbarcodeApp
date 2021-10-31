@@ -88,14 +88,13 @@ public class Addplants extends AppCompatActivity {
                    addplants(addplantname.getText().toString().toLowerCase(Locale.ROOT).trim());
                    newadminsignin(newadminemail.getText().toString(),newadminpassword.getText().toString().trim());
                    admindeatils(newadminname.getText().toString(),newadminphone.getText().toString(),newadminemail.getText().toString(),addplantname.getText().toString().toUpperCase(Locale.ROOT).trim());
-
-
-
+                   alertDialog.dismiss();
                 }
                 }
 
             });
                alertDialog.show();
+
         }
 
 

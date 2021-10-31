@@ -388,6 +388,7 @@ public class ScanCodeActivity extends AppCompatActivity implements ZXingScannerV
 //                                //Todo: get phno from firebase of this plants supervisors and use here
 //                                //Todo: get plant name from SharedPrefs
                                 if(checkSmsPermission()){
+                                    Toast.makeText(ScanCodeActivity.this,"Sending SMs ",Toast.LENGTH_LONG).show();
                                     //mySmsManager.sendTextMessage(supervisor_phno.get(0), null, "!!Alert!!\n\n"+"Please note in vehicle no: "+"MH12BH3501"+"\n"+"Part no: "+"SJ18001"+"\n"+"Found Wrong barcode QTY: "+"3"+"\n\n"+"PLease act immediately before reaching to customer", null, null);
                                     for(String i : supervisor_phno) {
                                         new Sendsms(i).execute();

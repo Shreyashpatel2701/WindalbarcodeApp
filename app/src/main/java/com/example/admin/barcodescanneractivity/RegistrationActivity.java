@@ -212,7 +212,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 .add(register_data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(@NonNull DocumentReference documentReference) {
-
+                register_data_supervisior(Email,Phone,Name);
                 Toast.makeText(RegistrationActivity.this,"Admin added",Toast.LENGTH_LONG).show();
 
                 Intent mainIntent = new Intent(RegistrationActivity.this, Adminbottomnavigation.class);

@@ -1,29 +1,36 @@
 package com.example.admin.barcodescanneractivity.Admin;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.admin.barcodescanneractivity.Loginactivity;
 import com.example.admin.barcodescanneractivity.R;
 import com.example.admin.barcodescanneractivity.vehicleinformation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -33,6 +40,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 public class AdminLoginScreen extends AppCompatActivity {
+    TextView recoverPaaword;
     EditText EMAIL,PASSWORD;
     Button Login;
     Spinner plant_selection;
@@ -42,6 +50,8 @@ public class AdminLoginScreen extends AppCompatActivity {
     ArrayList<String> array = new ArrayList<String>();
     String[] stringArray={};
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    ProgressDialog progressBar;
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
 
 
@@ -53,12 +63,19 @@ public class AdminLoginScreen extends AppCompatActivity {
         //spinner_plants();
         plant_spinner();
         Login.setOnClickListener(new btnloginonclicklisteneradmin());
+        recoverPaaword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showRecoverPasswordDialog();
+            }
+        });
         sh = getSharedPreferences("LoginSharedPref", MODE_PRIVATE);
         myEdit = sh.edit();
     }
 
     void init(){
-
+        recoverPaaword = findViewById(R.id.forgetpassword);
+        progressBar = new ProgressDialog(AdminLoginScreen.this);
         EMAIL = findViewById(R.id.login_email_admin);
         PASSWORD = findViewById(R.id.login_password_admin);
         Login = findViewById(R.id.login_button_admin);
@@ -104,6 +121,96 @@ public class AdminLoginScreen extends AppCompatActivity {
         plant_selection.setAdapter(adapter_plants);
     }
 
+    private void showRecoverPasswordDialog() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(AdminLoginScreen.this);
+                builder.setTitle("Recover Password");
+                LinearLayout linearLayout = new LinearLayout(AdminLoginScreen.this);
+                final EditText emailet = new EditText(AdminLoginScreen.this);//write your registered email
+                emailet.setText("Email");
+                emailet.setMinEms(16);
+                emailet.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                linearLayout.addView(emailet);
+                linearLayout.setPadding(10, 10, 10, 10);
+                builder.setView(linearLayout);
+                builder.setPositiveButton("Recover", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String emaill = emailet.getText().toString().trim();
+                        beginRecovery(emaill);
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.create().show();
+
+            }
+        });
+    }
+
+
+
+    // begin recovery email (async task class)
+    private void beginRecovery(String emaill) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+
+
+                progressBar.setMessage("Sending Email....");
+                progressBar.setCanceledOnTouchOutside(false);
+                progressBar.show();
+            }
+        });
+
+        // send reset password email
+        firebaseAuth.sendPasswordResetEmail(emaill).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                        progressBar.dismiss();
+                        if (task.isSuccessful()) {
+                            Toast.makeText(AdminLoginScreen.this, "Done sent", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(AdminLoginScreen.this, "Error Occured", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                        progressBar.dismiss();
+                        Toast.makeText(AdminLoginScreen.this, "Error Failed", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
+    }
+
+
+
+
+
+
     void Admin_Login_auth(String email,String password){
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         firebaseAuth.signInWithEmailAndPassword(email,password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -127,6 +234,7 @@ public class AdminLoginScreen extends AppCompatActivity {
                                     myEdit.commit();
                                     Intent intent = new Intent(AdminLoginScreen.this, Adminbottomnavigation.class);
                                     startActivity(intent);
+                                    finish();
                                     Toast.makeText(AdminLoginScreen.this, "Registered User", Toast.LENGTH_LONG).show();
                                 }else {
                                     progressDialog.dismiss();

@@ -99,9 +99,8 @@
                 />
 
 
-
             <TextView
-                android:id="@+id/forgetpassword"
+                android:id="@+id/recoverpassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/spinner_plant"
@@ -119,7 +118,7 @@
                 android:id="@+id/login_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/forgetpassword"
+                android:layout_below="@+id/recoverpassword"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="30dp"
